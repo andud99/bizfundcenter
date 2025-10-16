@@ -1,0 +1,16 @@
+body {
+  background-color: #f4f6f9;
+  font-family: 'Noto Sans KR', sans-serif;
+  text-align: center;
+  padding: 50px;
+}
+
+h1 {
+  color: #005bac;
+  font-size: 2.5em;
+}
+
+p {
+  font-size: 1.2em;
+  color: #333;
+}
