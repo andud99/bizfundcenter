@@ -8,5 +8,22 @@
 <body>
   <h1>중소기업자금지원센터</h1>
   <p>당신의 사업, 우리의 자금으로 함께 성장합니다.</p>
+<h2>자금지원 신청서</h2>
+<form>
+  <label>이름:<br><input type="text" name="name" required></label><br><br>
+  <label>회사명:<br><input type="text" name="company" required></label><br><br>
+  <label>자금 종류:<br>
+    <select name="type">
+      <option>창업자금</option>
+      <option>운전자금</option>
+      <option>시설자금</option>
+    </select>
+  </label><br><br>
+  <label>신청 금액 (만원):<br><input type="number" name="amount" required></label><br><br>
+  <label>사업 개요:<br><textarea name="desc" rows="5"></textarea></label><br><br>
+  <button type="submit">신청하기</button>
+</form>
+
 </body>
 </html>
+
