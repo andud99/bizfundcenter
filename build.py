@@ -285,15 +285,15 @@ def build_widget(posts):
 <title>최신 칼럼</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-body{{margin:0;font-family:Pretendard,system-ui,sans-serif;background:transparent;color:#14254a;word-break:keep-all}}
-.w{{border-top:3px solid #14254a;padding:14px 0 4px}}
+body{{margin:0;font-family:Pretendard,system-ui,sans-serif;background:transparent;color:#1f2430;word-break:keep-all}}
+.w{{border-top:3px solid #f39200;padding:14px 0 4px}}
 .w-head{{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 6px}}
-.w-head b{{font-size:17px}} .w-head a{{font-size:14px;color:#2f5bd3;text-decoration:none}}
+.w-head b{{font-size:17px}} .w-head a{{font-size:14px;color:#b85e00;text-decoration:none}}
 ul{{list-style:none;margin:0;padding:0}}
-li{{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #dde2ee;font-size:15px}}
-li a{{color:#14254a;text-decoration:none;line-height:1.45}} li a:hover{{color:#2f5bd3}}
-li span{{color:#c2416c;font-weight:600;margin-right:8px;font-size:13px}}
-time{{color:#6b7591;font-size:13px;white-space:nowrap;padding-top:2px}}
+li{{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #e3e3de;font-size:15px}}
+li a{{color:#1f2430;text-decoration:none;line-height:1.45}} li a:hover{{color:#b85e00}}
+li span{{color:#d97f00;font-weight:600;margin-right:8px;font-size:13px}}
+time{{color:#5d6270;font-size:13px;white-space:nowrap;padding-top:2px}}
 </style></head>
 <body><div class="w"><div class="w-head"><b>최신 칼럼</b><a href="{FULL}/" target="_top">전체 보기</a></div><ul>{items}</ul></div></body></html>
 """
