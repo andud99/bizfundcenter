@@ -96,7 +96,7 @@ HEAD = """<!doctype html>
 <body>
 <header class="masthead">
   <div class="wrap masthead-row">
-    <a class="brand" href="{base}/">기업자금센터 <span>자금칼럼</span></a>
+    <a class="brand" href="{base}/">기업자금센터 <span>자금정보</span></a>
     <nav class="nav">
       <a href="{base}/">전체 글</a>
       <a href="{home}" rel="noopener">기업자금센터 홈</a>
@@ -282,7 +282,7 @@ def build_widget(posts):
     w = f"""<!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>최신 자금칼럼</title>
+<title>최신 자금정보</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
 body{{margin:0;font-family:Pretendard,system-ui,sans-serif;background:transparent;color:#1f2430;word-break:keep-all}}
@@ -295,7 +295,7 @@ li a{{color:#1f2430;text-decoration:none;line-height:1.45}} li a:hover{{color:#b
 li span{{color:#d97f00;font-weight:600;margin-right:8px;font-size:13px}}
 time{{color:#5d6270;font-size:13px;white-space:nowrap;padding-top:2px}}
 </style></head>
-<body><div class="w"><div class="w-head"><b>최신 자금칼럼</b><a href="{FULL}/" target="_top">전체 보기</a></div><ul>{items}</ul></div></body></html>
+<body><div class="w"><div class="w-head"><b>최신 자금정보</b><a href="{FULL}/" target="_top">전체 보기</a></div><ul>{items}</ul></div></body></html>
 """
     write("widget.html", w)
 
