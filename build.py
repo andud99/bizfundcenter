@@ -285,15 +285,24 @@ def build_widget(posts):
 <title>최신 자금정보</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-body{{margin:0;font-family:Pretendard,system-ui,sans-serif;background:transparent;color:#1f2430;word-break:keep-all}}
-.w{{border-top:3px solid #f39200;padding:14px 0 4px}}
-.w-head{{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 6px}}
-.w-head b{{font-size:17px}} .w-head a{{font-size:14px;color:#b85e00;text-decoration:none}}
+*{{box-sizing:border-box}}
+html,body{{margin:0;padding:0;overflow-x:hidden}}
+body{{font-family:Pretendard,system-ui,sans-serif;background:transparent;color:#1f2430;word-break:keep-all;padding:0 20px}}
+.w{{border-top:3px solid #f39200;padding:14px 0 4px;max-width:100%}}
+.w-head{{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 0 6px}}
+.w-head b{{font-size:17px}} .w-head a{{font-size:14px;color:#b85e00;text-decoration:none;white-space:nowrap}}
 ul{{list-style:none;margin:0;padding:0}}
 li{{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #e3e3de;font-size:15px}}
-li a{{color:#1f2430;text-decoration:none;line-height:1.45}} li a:hover{{color:#b85e00}}
+li a{{color:#1f2430;text-decoration:none;line-height:1.45;min-width:0}} li a:hover{{color:#b85e00}}
 li span{{color:#d97f00;font-weight:600;margin-right:8px;font-size:13px}}
-time{{color:#5d6270;font-size:13px;white-space:nowrap;padding-top:2px}}
+time{{color:#5d6270;font-size:13px;white-space:nowrap;padding-top:2px;flex:none}}
+@media (max-width:520px){{
+  body{{padding:0 16px}}
+  li{{flex-direction:column;gap:4px}}
+  li span{{display:block;margin:0 0 2px}}
+  time{{padding-top:0;font-size:12px}}
+  li:nth-child(n+3){{display:none}}
+}}
 </style></head>
 <body><div class="w"><div class="w-head"><b>최신 자금정보</b><a href="{FULL}/" target="_top">전체 보기</a></div><ul>{items}</ul></div></body></html>
 """
