@@ -195,3 +195,5 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .lim-detail > p { margin: 0; color: #3a3f4b; line-height: 1.7; }
 .lim-detail form { margin-top: 20px; }
 @media (max-width: 560px) { .lim-grid { grid-template-columns: 1fr; } }
+.lim-step { margin: 8px 0 0; font-weight: 800; font-size: 16px; color: var(--navy); border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+.lim-doors { margin: 10px 0 0; font-weight: 700; font-size: 17px; }
