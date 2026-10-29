@@ -278,8 +278,8 @@ def build_apply():
 
 def build_limit():
     content = f"""<section class="wrap apply limit">
-  <h1>예상 자금 한도 계산</h1>
-  <p class="lead">회사 정보를 넣으면 지금 받을 수 있는 정책자금의 대략적인 범위를 보여드립니다. 입력한 내용은 저장되지 않습니다.</p>
+  <h1>예상 운전자금 한도 계산</h1>
+  <p class="lead">회사 정보를 넣으면 지금 받을 수 있는 운전자금의 대략적인 범위를 보여드립니다. 공장·설비 같은 시설자금은 따로 봐야 합니다. 입력한 내용은 저장되지 않습니다.</p>
   <form id="calcForm" novalidate>
     <p class="lim-step">1. 회사 기본 정보</p>
     <fieldset class="lim-grid">
@@ -332,6 +332,7 @@ def build_limit():
     <fieldset class="lim-grid">
       <label>신보·기보 이용 금액 (억 원)<input id="useA" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
       <label>지역 재단 이용 금액 (억 원)<input id="useB" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
+      <label>중진공 운전자금 이용 금액 (억 원)<input id="useCamt" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
       <label>중진공 직접대출 받은 횟수
         <select id="useC">
           <option value="0">받은 적 없음</option>
@@ -355,6 +356,8 @@ def build_limit():
       <label><input type="checkbox" name="cert">이노비즈·메인비즈</label>
       <label><input type="checkbox" name="cert">기업부설연구소·전담부서</label>
       <label><input type="checkbox" name="cert">특허</label>
+      <label><input type="checkbox" id="lead">유망·선도 업종 (신성장·혁신 분야 등)</label>
+      <label><input type="checkbox" id="ipsales">매출 비중이 큰 특허 (특허 제품 매출이 큼)</label>
       <label><input type="checkbox" id="agri">농수산물을 원료로 제조</label>
       <label><input type="checkbox" id="land">회사나 대표님 명의 부동산 있음</label>
       <label><input type="checkbox" id="tax">밀린 세금(부가세·4대보험 등) 있음</label>
@@ -364,7 +367,7 @@ def build_limit():
   </form>
 
   <div id="result" class="lim-result" hidden>
-    <p class="lim-eyebrow">예상 정책자금 한도</p>
+    <p class="lim-eyebrow">예상 운전자금 한도</p>
     <p class="lim-range" id="range"></p>
     <p class="lim-doors" id="doors"></p>
     <ul class="lim-notes" id="notes"></ul>
@@ -394,12 +397,14 @@ def build_limit():
 (function () {{
   /* 산식 설정 — 숫자만 고치면 계산이 바뀝니다. 금액 단위: 억 원 */
   var R = {{
-    A: {{ rate: {{ mfg: 1/4, tech: 0.30, whole: 1/6, cons: 0.20, svc: 0.20 }},
+    A: {{ rate: {{ mfg: 1/4, tech: 1/6, whole: 1/6, cons: 1/6, svc: 1/6 }},
          ageCap: {{ 1: 3, 2: 10, 3: 30 }}, startupFloor: 1 }},
     B: {{ totalCap: 8, max: 2 }},
-    C: {{ low: 1, high: 2, times: 3 }},
+    C: {{ low: 1, high: 2, times: 3, totalLow: 2, totalHigh: 3 }},  // 1년 1회 1~2억, 누적 2~3억
     D: {{ empMax: {{ mfg: 10, cons: 10, tech: 5, whole: 5, svc: 5 }}, low: 0.5, high: 2, times: 2 }},
     E: {{ rate: 1/4, max: 5 }},
+    G: {{ low: 1, high: 3 }},                      // 매출 비중이 큰 특허 활용
+    leadRate: 1/4,                                // 유망·선도 업종은 제조와 같은 비율
     F: {{ fx: 0.000014, directMin: 1, directMax: 100, directRevMax: 100,
          direct: {{ 0: 0, 1: 0.5, 2: 1 }}, low: 0.10, high: 0.20 }},
     score: {{ a: 1.0, b: 0.85, c: 0.6, d: 0.3 }},
@@ -429,7 +434,9 @@ def build_limit():
     var adj = R.score[sc] * (loss ? R.loss : 1);
 
     // 갈래 A
-    var a = rev * R.A.rate[ind];
+    var rate = R.A.rate[ind];
+    if ($('lead').checked) rate = Math.max(rate, R.leadRate);
+    var a = rev * rate;
     if (age !== '3' && (sc === 'a' || sc === 'b')) a = Math.max(a, R.A.startupFloor);
     a = Math.min(a, R.A.ageCap[age]) * adj * (1 + Math.min(certs * R.certBonus, R.certMax));
     a = Math.max(0, a - useA);
@@ -440,7 +447,9 @@ def build_limit():
 
     // 갈래 C: 1년 1회, 최대 횟수
     var cOk = useC === '0' || useC === '1';
-    var cLow = cOk ? R.C.low * adj : 0, cHigh = cOk ? R.C.high * adj : 0;
+    var useCamt = num('useCamt');
+    var cLow = cOk ? Math.min(R.C.low, Math.max(0, R.C.totalLow - useCamt)) * adj : 0;
+    var cHigh = cOk ? Math.min(R.C.high, Math.max(0, R.C.totalHigh - useCamt)) * adj : 0;
 
     // 갈래 D: 소규모 사업장, 횟수 제한
     var dOk = emp < R.D.empMax[ind] && Number(useD) < R.D.times && sc !== 'd';
@@ -461,9 +470,12 @@ def build_limit():
       fWay = direct >= gHigh ? 'F간편' : (direct > 0 ? 'F간편/일반 비교' : 'F일반');
     }}
 
+    var gAmt = $('ipsales').checked ? R.G.high * R.score[sc] : 0;
+    var gLow = $('ipsales').checked ? R.G.low * R.score[sc] : 0;
+
     var parts = [
       ['A', a * R.rangeLow, a], ['B', b * R.rangeLow, b], ['C', cLow, cHigh],
-      ['D', dLow, dHigh], ['E', eAmt * R.rangeLow, eAmt], ['F', fLow, fHigh]
+      ['D', dLow, dHigh], ['E', eAmt * R.rangeLow, eAmt], ['F', fLow, fHigh], ['G', gLow, gAmt]
     ];
     var low = 0, high = 0, doors = 0;
     parts.forEach(function (p) {{ low += p[1]; high += p[2]; if (p[2] >= 0.1) doors++; }});
@@ -474,6 +486,7 @@ def build_limit():
     if (loss) notes.push('적자 결산은 한도를 줄입니다. 흑자로 돌아선 결산이 나온 뒤가 유리할 수 있습니다.');
     if (age === '1') notes.push('결산이 3년치 쌓이기 전에는 한도가 작게 묶이는 경우가 많습니다.');
     if (exp > 0) notes.push('수출 실적이 있으면 일반 운영자금과 별도로 열리는 문이 있습니다. 수출 규모에 따라 유리한 방식이 다릅니다.');
+    if ($('ipsales').checked) notes.push('매출로 이어지는 특허는 그 자체로 자금을 끌어오는 자산이 될 수 있습니다.');
     if ($('land').checked) notes.push('부동산이 있다면 위 범위와 별도로 담보를 활용한 자금도 가능합니다.');
     if (certs === 0 && (ind === 'mfg' || ind === 'tech')) notes.push('제조·기술 업종은 인증을 갖추면 범위가 넓어지는 경우가 많습니다.');
 
@@ -487,8 +500,8 @@ def build_limit():
     $('calcSummary').value = [
       '업종 ' + txt('ind'), '업력 ' + txt('age'), '매출 ' + rev + '억', '직원 ' + emp + '명',
       loss ? '적자' : '흑자', '수출 ' + exp + '만불', '대표신용 ' + txt('score'), '기업등급 ' + txt('grade'),
-      '기존A ' + useA + '억', '기존B ' + useB + '억', 'C이력 ' + txt('useC'), 'D이력 ' + txt('useD'),
-      '인증 ' + certs + '개', $('agri').checked ? '농수산 원료' : '', $('land').checked ? '부동산 있음' : '',
+      '기존A ' + useA + '억', '기존B ' + useB + '억', '기존C ' + useCamt + '억', 'C이력 ' + txt('useC'), 'D이력 ' + txt('useD'),
+      '인증 ' + certs + '개', $('lead').checked ? '유망·선도' : '', $('ipsales').checked ? '매출 특허' : '', $('agri').checked ? '농수산 원료' : '', $('land').checked ? '부동산 있음' : '',
       $('tax').checked ? '체납 있음' : '',
       '계산: ' + parts.filter(function (p) {{ return p[2] > 0; }}).map(function (p) {{ return p[0] + ' ' + r1(p[1]) + '~' + r1(p[2]); }}).join(', ') + (fWay ? ' (' + fWay + ')' : ''),
       '합계 ' + $('range').textContent
@@ -510,7 +523,7 @@ def build_limit():
 }})();
 </script>
 """
-    write("limit/index.html", page(f"예상 자금 한도 계산 | {SITE['title']}", "업종, 매출, 신용, 지금 쓰는 정책자금을 넣으면 받을 수 있는 정책자금의 대략적인 범위를 보여드립니다.", FULL + "/limit/", content))
+    write("limit/index.html", page(f"예상 운전자금 한도 계산 | {SITE['title']}", "업종, 매출, 신용, 지금 쓰는 정책자금을 넣으면 받을 수 있는 운전자금의 대략적인 범위를 보여드립니다.", FULL + "/limit/", content))
 
 
 def build_widget(posts):
