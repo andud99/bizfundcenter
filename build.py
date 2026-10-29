@@ -299,6 +299,12 @@ def build_limit():
           <option value="3">7년 이상</option>
         </select>
       </label>
+      <label>소재지
+        <select id="region">
+          <option value="cap">수도권 (서울·경기·인천)</option>
+          <option value="local">지방</option>
+        </select>
+      </label>
       <label>최근 1년 매출 (억 원)<input id="rev" type="number" min="0" step="0.1" inputmode="decimal" placeholder="예: 25"></label>
       <label>상시 직원 수 (명)<input id="emp" type="number" min="0" step="1" inputmode="numeric" placeholder="대표 제외"></label>
       <label>최근 결산 영업이익
@@ -330,7 +336,7 @@ def build_limit():
 
     <p class="lim-step">3. 지금 쓰고 있는 정책자금</p>
     <fieldset class="lim-grid">
-      <label>신보·기보 이용 금액 (억 원)<input id="useA" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
+      <label>신보·기보 이용 금액 (억 원, 둘 합계)<input id="useA" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
       <label>지역 재단 이용 금액 (억 원)<input id="useB" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
       <label>중진공 운전자금 이용 금액 (억 원)<input id="useCamt" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
       <label>중진공 직접대출 받은 횟수
@@ -341,13 +347,7 @@ def build_limit():
           <option value="3">3회 모두 받음</option>
         </select>
       </label>
-      <label>소진공 직접대출 받은 횟수
-        <select id="useD">
-          <option value="0">받은 적 없음</option>
-          <option value="1">1회</option>
-          <option value="2">2회 이상</option>
-        </select>
-      </label>
+      <label>소진공 직접대출 이용 금액 (억 원)<input id="useD" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
     </fieldset>
 
     <p class="lim-step">4. 해당 사항</p>
@@ -398,10 +398,13 @@ def build_limit():
   /* 산식 설정 — 숫자만 고치면 계산이 바뀝니다. 금액 단위: 억 원 */
   var R = {{
     A: {{ rate: {{ mfg: 1/4, tech: 1/6, whole: 1/6, cons: 1/6, svc: 1/6 }},
-         ageCap: {{ 1: 3, 2: 10, 3: 30 }}, startupFloor: 1 }},
+         ageCap: {{ 1: 3, 2: 10, 3: 15 }}, startupFloor: 1, branchCap: 15 }},  // 지점 한도 15억 (신·기보 중복 안 됨)
     B: {{ totalCap: 8, max: 2 }},
-    C: {{ low: 1, high: 2, times: 3, totalLow: 2, totalHigh: 3 }},  // 1년 1회 1~2억, 누적 2~3억
-    D: {{ empMax: {{ mfg: 10, cons: 10, tech: 5, whole: 5, svc: 5 }}, low: 0.5, high: 2, times: 2 }},
+    C: {{ low: 1, high: 2, times: 3,
+         total: {{ cap: [2, 3], local: [3, 5] }} }},  // 1년 1회 1~2억, 누적 수도권 2~3억 / 지방 3~5억
+    D: {{ empMax: {{ mfg: 10, cons: 10, tech: 5, whole: 5, svc: 5 }}, low: 0.5,
+         totalMfgExport: 2, totalOther: 1, region: {{ cap: 0.8, local: 1.0 }} }},  // 누적 상한: 제조+수출 2억, 그 외 1억
+    H: {{ revMin: 100, useMin: 15, low: 7, high: 10 }},  // 매출 100억 이상 + 신기보 15억 사용 시 추가 (유동화)
     E: {{ rate: 1/4, max: 5 }},
     G: {{ low: 1, high: 3 }},                      // 매출 비중이 큰 특허 활용
     leadRate: 1/4,                                // 유망·선도 업종은 제조와 같은 비율
@@ -428,7 +431,7 @@ def build_limit():
 
     var ind = $('ind').value, age = $('age').value, sc = $('score').value, grade = $('grade').value;
     var emp = num('emp'), exp = num('exp'), useA = num('useA'), useB = num('useB');
-    var useC = $('useC').value, useD = $('useD').value;
+    var useC = $('useC').value, useD = num('useD'), region = $('region').value;
     var certs = calc.querySelectorAll('input[name=cert]:checked').length;
     var loss = $('profit').value === 'minus';
     var adj = R.score[sc] * (loss ? R.loss : 1);
@@ -439,7 +442,7 @@ def build_limit():
     var a = rev * rate;
     if (age !== '3' && (sc === 'a' || sc === 'b')) a = Math.max(a, R.A.startupFloor);
     a = Math.min(a, R.A.ageCap[age]) * adj * (1 + Math.min(certs * R.certBonus, R.certMax));
-    a = Math.max(0, a - useA);
+    a = Math.max(0, Math.min(a, R.A.branchCap) - useA);
 
     // 갈래 B: 전체 합계 상한 안에서만
     var room = R.B.totalCap - (useA + a + useB);
@@ -448,13 +451,20 @@ def build_limit():
     // 갈래 C: 1년 1회, 최대 횟수
     var cOk = useC === '0' || useC === '1';
     var useCamt = num('useCamt');
-    var cLow = cOk ? Math.min(R.C.low, Math.max(0, R.C.totalLow - useCamt)) * adj : 0;
-    var cHigh = cOk ? Math.min(R.C.high, Math.max(0, R.C.totalHigh - useCamt)) * adj : 0;
+    var ct = R.C.total[region];
+    var cLow = cOk ? Math.min(R.C.low, Math.max(0, ct[0] - useCamt)) * adj : 0;
+    var cHigh = cOk ? Math.min(R.C.high, Math.max(0, ct[1] - useCamt)) * adj : 0;
 
     // 갈래 D: 소규모 사업장, 횟수 제한
-    var dOk = emp < R.D.empMax[ind] && Number(useD) < R.D.times && sc !== 'd';
-    var dHigh = dOk ? Math.min(R.D.high, Math.max(R.D.low, rev * 0.25)) : 0;
-    var dLow = dOk ? R.D.low : 0;
+    var dTotal = (ind === 'mfg' && exp > 0) ? R.D.totalMfgExport : R.D.totalOther;
+    var dRoom = Math.max(0, dTotal - useD);
+    var dOk = emp < R.D.empMax[ind] && sc !== 'd' && dRoom > 0;
+    var dHigh = dOk ? dRoom * R.D.region[region] : 0;
+    var dLow = dOk ? Math.min(R.D.low, dHigh) : 0;
+
+    // 갈래 H: 대형 기업 추가
+    var hOk = rev >= R.H.revMin && useA >= R.H.useMin;
+    var hLow = hOk ? R.H.low : 0, hHigh = hOk ? R.H.high : 0;
 
     // 갈래 E: 농수산물 원료 제조
     var eAmt = 0;
@@ -475,7 +485,7 @@ def build_limit():
 
     var parts = [
       ['A', a * R.rangeLow, a], ['B', b * R.rangeLow, b], ['C', cLow, cHigh],
-      ['D', dLow, dHigh], ['E', eAmt * R.rangeLow, eAmt], ['F', fLow, fHigh], ['G', gLow, gAmt]
+      ['D', dLow, dHigh], ['E', eAmt * R.rangeLow, eAmt], ['F', fLow, fHigh], ['G', gLow, gAmt], ['H', hLow, hHigh]
     ];
     var low = 0, high = 0, doors = 0;
     parts.forEach(function (p) {{ low += p[1]; high += p[2]; if (p[2] >= 0.1) doors++; }});
@@ -500,7 +510,7 @@ def build_limit():
     $('calcSummary').value = [
       '업종 ' + txt('ind'), '업력 ' + txt('age'), '매출 ' + rev + '억', '직원 ' + emp + '명',
       loss ? '적자' : '흑자', '수출 ' + exp + '만불', '대표신용 ' + txt('score'), '기업등급 ' + txt('grade'),
-      '기존A ' + useA + '억', '기존B ' + useB + '억', '기존C ' + useCamt + '억', 'C이력 ' + txt('useC'), 'D이력 ' + txt('useD'),
+      '기존A ' + useA + '억', '기존B ' + useB + '억', '기존C ' + useCamt + '억', 'C이력 ' + txt('useC'), '기존D ' + useD + '억', '소재지 ' + txt('region'),
       '인증 ' + certs + '개', $('lead').checked ? '유망·선도' : '', $('ipsales').checked ? '매출 특허' : '', $('agri').checked ? '농수산 원료' : '', $('land').checked ? '부동산 있음' : '',
       $('tax').checked ? '체납 있음' : '',
       '계산: ' + parts.filter(function (p) {{ return p[2] > 0; }}).map(function (p) {{ return p[0] + ' ' + r1(p[1]) + '~' + r1(p[2]); }}).join(', ') + (fWay ? ' (' + fWay + ')' : ''),
