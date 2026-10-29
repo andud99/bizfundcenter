@@ -21,6 +21,7 @@ FULL = SITE["url"].rstrip("/") + BASE
 KST = timezone(timedelta(hours=9))
 
 CATEGORIES = {
+    "현장 사례": "cases",
     "정책자금": "policy",
     "기술개발자금": "rnd",
     "창업지원금": "startup",
@@ -161,12 +162,12 @@ CTA = """<aside class="cta">
 
 
 def topic_strip():
-    plan = [("월", "정책자금", "정책"), ("화", "기술개발자금", "R&D"), ("수", "창업지원금", "창업"), ("목", "세금·구조", "세무"), ("금", "공고 체크", "공고")]
+    plan = [("사례", "현장 사례", "사례"), ("정책", "정책자금", "정책"), ("R&D", "기술개발자금", "R&D"), ("창업", "창업지원금", "창업"), ("세무", "세금·구조", "세무"), ("공고", "공고 체크", "공고")]
     cells = "".join(
-        f'<li><b>{d}</b><a href="{BASE}/c/{CATEGORIES[c]}/" aria-label="{esc(c)}"><span class="long">{esc(c)}</span><span class="short" aria-hidden="true">{esc(s)}</span></a></li>'
+        f'<li><b>{esc(d)}</b><a href="{BASE}/c/{CATEGORIES[c]}/" aria-label="{esc(c)}"><span class="long">{esc(c)}</span><span class="short" aria-hidden="true">{esc(s)}</span></a></li>'
         for d, c, s in plan
     )
-    return f'<ol class="strip" aria-label="요일별 칼럼 주제">{cells}</ol>'
+    return f'<ol class="strip" aria-label="칼럼 주제">{cells}</ol>'
 
 
 def build_list_page(posts, heading, lead, canonical, out):
