@@ -362,6 +362,26 @@ def build_limit():
       <label><input type="checkbox" id="land">회사나 대표님 명의 부동산 있음</label>
       <label><input type="checkbox" id="tax">밀린 세금(부가세·4대보험 등) 있음</label>
     </fieldset>
+    <p class="lim-step">5. 결과 받으실 연락처</p>
+    <fieldset class="lim-grid">
+      <label>성함<input id="cName" type="text" autocomplete="name" required></label>
+      <label>회사명<input id="cCompany" type="text" autocomplete="organization" required></label>
+      <label>연락처<input id="cPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="010-0000-0000" required></label>
+      <label>사업자등록번호<input id="cBiz" type="text" inputmode="numeric" placeholder="000-00-00000" maxlength="12" required></label>
+    </fieldset>
+    <div class="lim-consent">
+      <label><input type="checkbox" id="cAgree" required> 개인정보 수집·이용에 동의합니다 (필수)</label>
+      <details>
+        <summary>내용 보기</summary>
+        <ul>
+          <li>수집 항목: 성함, 회사명, 연락처, 사업자등록번호, 이 화면에 입력한 회사 정보</li>
+          <li>수집 목적: 예상 한도 안내 및 자금 상담 연락</li>
+          <li>보유 기간: 수집일로부터 1년. 기간이 지나거나 삭제를 요청하시면 지체 없이 파기합니다.</li>
+          <li>처리 위탁: 접수 내용은 양식 전송 서비스(Formspree, 미국)를 거쳐 기업자금센터 담당자 메일로 전달됩니다.</li>
+          <li>동의를 거부할 수 있으며, 거부하시면 예상 한도 결과를 보실 수 없습니다.</li>
+        </ul>
+      </details>
+    </div>
     <button class="btn" type="submit">예상 한도 보기</button>
     <p class="form-note" id="calcNote" role="status"></p>
   </form>
@@ -376,21 +396,9 @@ def build_limit():
 
   <div id="detail" class="lim-detail" hidden>
     <h2>어느 문부터, 어떤 순서로?</h2>
-    <p>같은 한도라도 어디에 먼저 들어가느냐, 결산 전후 언제 신청하느냐에 따라 결과가 크게 달라집니다. 순서를 잘못 잡으면 뒤의 문이 닫히기도 합니다. 연락처를 남겨 주시면 담당자가 우리 회사에 맞는 순서를 정리해 연락드립니다.</p>
-    <form id="leadForm" action="{esc(SITE['formspree'])}" method="POST">
-      <label>성함<input type="text" name="name" autocomplete="name" required></label>
-      <label>회사명<input type="text" name="company" autocomplete="organization" required></label>
-      <label>연락처<input type="tel" name="phone" autocomplete="tel" required></label>
-      <input type="hidden" name="calc" id="calcSummary">
-      <input type="hidden" name="_source" value="예상 한도 계산">
-      <button class="btn" type="submit">맞춤 순서 안내받기</button>
-      <p class="form-note" id="leadNote" role="status"></p>
-    </form>
-    <div id="thanks" class="thanks" hidden>
-      <h2>접수되었습니다</h2>
-      <p>담당자가 확인 후 영업일 기준 1~2일 안에 연락드립니다.</p>
-      <a class="more" href="{BASE}/c/cases/">현장 사례 읽기</a>
-    </div>
+    <p>같은 한도라도 어디에 먼저 들어가느냐, 결산 전후 언제 신청하느냐에 따라 결과가 크게 달라집니다. 순서를 잘못 잡으면 뒤의 문이 닫히기도 합니다. 남겨 주신 연락처로 담당자가 우리 회사에 맞는 순서를 정리해 영업일 기준 1~2일 안에 연락드립니다.</p>
+    <p class="form-note" id="sendNote" role="status"></p>
+    <a class="more" href="{BASE}/c/cases/">현장 사례 읽기</a>
   </div>
 </section>
 <script>
@@ -414,6 +422,7 @@ def build_limit():
     loss: 0.7, certBonus: 0.1, certMax: 0.3, rangeLow: 0.7
   }};
 
+  var FORM_URL = '{esc(SITE['formspree'])}';
   function $(id) {{ return document.getElementById(id); }}
   function num(id) {{ var v = parseFloat($(id).value); return v > 0 ? v : 0; }}
   function eok(v) {{
@@ -421,12 +430,26 @@ def build_limit():
     return (Math.round(v * 10) / 10).toString().replace(/\\.0$/, '') + '억 원';
   }}
   function txt(id) {{ return $(id).selectedOptions[0].text; }}
+  function validBiz(d) {{
+    if (!/^\\d{{10}}$/.test(d)) return false;
+    var w = [1, 3, 7, 1, 3, 7, 1, 3, 5], sum = 0;
+    for (var i = 0; i < 9; i++) sum += Number(d[i]) * w[i];
+    sum += Math.floor(Number(d[8]) * 5 / 10);
+    return (10 - (sum % 10)) % 10 === Number(d[9]);
+  }}
 
   var calc = $('calcForm');
   calc.addEventListener('submit', function (e) {{
     e.preventDefault();
     var rev = parseFloat($('rev').value);
     if (!(rev >= 0)) {{ $('calcNote').textContent = '최근 1년 매출을 숫자로 넣어 주세요.'; $('rev').focus(); return; }}
+    var bizDigits = $('cBiz').value.replace(/\\D/g, '');
+    var phoneDigits = $('cPhone').value.replace(/\\D/g, '');
+    if (!$('cName').value.trim()) {{ $('calcNote').textContent = '성함을 넣어 주세요.'; $('cName').focus(); return; }}
+    if (!$('cCompany').value.trim()) {{ $('calcNote').textContent = '회사명을 넣어 주세요.'; $('cCompany').focus(); return; }}
+    if (phoneDigits.length < 9) {{ $('calcNote').textContent = '연락 가능한 번호를 넣어 주세요.'; $('cPhone').focus(); return; }}
+    if (!validBiz(bizDigits)) {{ $('calcNote').textContent = '사업자등록번호 10자리를 정확히 넣어 주세요.'; $('cBiz').focus(); return; }}
+    if (!$('cAgree').checked) {{ $('calcNote').textContent = '개인정보 수집·이용에 동의하셔야 결과를 보실 수 있습니다.'; $('cAgree').focus(); return; }}
     $('calcNote').textContent = '';
 
     var ind = $('ind').value, age = $('age').value, sc = $('score').value, grade = $('grade').value;
@@ -507,7 +530,7 @@ def build_limit():
     ul.hidden = notes.length === 0;
 
     var r1 = function (v) {{ return Math.round(v * 10) / 10; }};
-    $('calcSummary').value = [
+    var summary = [
       '업종 ' + txt('ind'), '업력 ' + txt('age'), '매출 ' + rev + '억', '직원 ' + emp + '명',
       loss ? '적자' : '흑자', '수출 ' + exp + '만불', '대표신용 ' + txt('score'), '기업등급 ' + txt('grade'),
       '기존A ' + useA + '억', '기존B ' + useB + '억', '기존C ' + useCamt + '억', 'C이력 ' + txt('useC'), '기존D ' + useD + '억', '소재지 ' + txt('region'),
@@ -518,18 +541,24 @@ def build_limit():
     ].filter(Boolean).join(' / ');
 
     $('result').hidden = false; $('detail').hidden = false;
+    var fd = new FormData();
+    fd.append('name', $('cName').value.trim());
+    fd.append('company', $('cCompany').value.trim());
+    fd.append('phone', $('cPhone').value.trim());
+    fd.append('bizno', bizDigits.replace(/(\\d{{3}})(\\d{{2}})(\\d{{5}})/, '$1-$2-$3'));
+    fd.append('calc', summary);
+    fd.append('consent', '개인정보 수집·이용 동의함 (' + new Date().toLocaleString('ko-KR') + ')');
+    fd.append('_subject', '[예상 한도] ' + $('cCompany').value.trim() + ' / ' + $('range').textContent);
+    fd.append('_source', '예상 한도 계산');
+    var btn = calc.querySelector('button[type=submit]');
+    btn.disabled = true;
+    fetch(FORM_URL, {{ method: 'POST', body: fd, headers: {{ 'Accept': 'application/json' }} }})
+      .then(function (r) {{ if (!r.ok) throw new Error(); $('sendNote').textContent = ''; }})
+      .catch(function () {{ $('sendNote').textContent = '연락처 전송이 원활하지 않았습니다. 상담을 원하시면 상단 상담 신청을 이용해 주세요.'; }})
+      .then(function () {{ btn.disabled = false; }});
     $('result').scrollIntoView({{ behavior: 'smooth', block: 'start' }});
   }});
 
-  var lead = $('leadForm');
-  lead.addEventListener('submit', function (e) {{
-    e.preventDefault();
-    var btn = lead.querySelector('button');
-    btn.disabled = true; $('leadNote').textContent = '보내는 중입니다...';
-    fetch(lead.action, {{ method: 'POST', body: new FormData(lead), headers: {{ 'Accept': 'application/json' }} }})
-      .then(function (r) {{ if (!r.ok) throw new Error(); lead.hidden = true; $('thanks').hidden = false; }})
-      .catch(function () {{ btn.disabled = false; $('leadNote').textContent = '전송되지 않았습니다. 잠시 후 다시 눌러 주세요.'; }});
-  }});
 }})();
 </script>
 """

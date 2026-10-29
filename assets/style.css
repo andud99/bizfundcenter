@@ -197,3 +197,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 @media (max-width: 560px) { .lim-grid { grid-template-columns: 1fr; } }
 .lim-step { margin: 8px 0 0; font-weight: 800; font-size: 16px; color: var(--navy); border-bottom: 1px solid var(--line); padding-bottom: 8px; }
 .lim-doors { margin: 10px 0 0; font-weight: 700; font-size: 17px; }
+.lim-consent { display: grid; gap: 8px; font-size: 15px; }
+.lim-consent > label { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.lim-consent input { width: 18px; height: 18px; margin: 0; accent-color: var(--pink); }
+.lim-consent details { color: var(--muted); font-size: 14px; }
+.lim-consent summary { cursor: pointer; }
+.lim-consent ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; line-height: 1.6; }
