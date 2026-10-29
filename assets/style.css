@@ -203,3 +203,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .lim-consent details { color: var(--muted); font-size: 14px; }
 .lim-consent summary { cursor: pointer; }
 .lim-consent ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; line-height: 1.6; }
+.lim-ask { margin-top: 20px; background: var(--white); padding: 24px; display: grid; gap: 16px; border-top: 4px solid var(--pink); }
+.lim-ask label { display: grid; gap: 6px; font-weight: 600; font-size: 15px; }
+.lim-ask .btn { justify-self: start; }

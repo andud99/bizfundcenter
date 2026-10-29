@@ -396,9 +396,24 @@ def build_limit():
 
   <div id="detail" class="lim-detail" hidden>
     <h2>어느 문부터, 어떤 순서로?</h2>
-    <p>같은 한도라도 어디에 먼저 들어가느냐, 결산 전후 언제 신청하느냐에 따라 결과가 크게 달라집니다. 순서를 잘못 잡으면 뒤의 문이 닫히기도 합니다. 남겨 주신 연락처로 담당자가 우리 회사에 맞는 순서를 정리해 영업일 기준 1~2일 안에 연락드립니다.</p>
-    <p class="form-note" id="sendNote" role="status"></p>
-    <a class="more" href="{BASE}/c/cases/">현장 사례 읽기</a>
+    <p>같은 한도라도 어디에 먼저 들어가느냐, 결산 전후 언제 신청하느냐에 따라 결과가 크게 달라집니다. 순서를 잘못 잡으면 뒤의 문이 닫히기도 합니다. 우리 회사에 맞는 순서가 궁금하시면 상담을 신청해 주세요.</p>
+    <div class="lim-ask" id="askBox">
+      <label>편한 연락 시간
+        <select id="askTime">
+          <option>언제든 괜찮음</option>
+          <option>오전 (9~12시)</option>
+          <option>오후 (1~6시)</option>
+        </select>
+      </label>
+      <label>궁금한 점 (선택)<textarea id="askMsg" rows="3" placeholder="예: 다음 달까지 운전자금이 필요합니다"></textarea></label>
+      <button class="btn" type="button" id="askBtn">무료 상담 신청하기</button>
+      <p class="form-note" id="askNote" role="status"></p>
+    </div>
+    <div id="thanks" class="thanks" hidden>
+      <h2>상담 신청이 접수되었습니다</h2>
+      <p>담당자가 확인 후 영업일 기준 1~2일 안에 연락드립니다.</p>
+      <a class="more" href="{BASE}/c/cases/">현장 사례 읽기</a>
+    </div>
   </div>
 </section>
 <script>
@@ -423,6 +438,7 @@ def build_limit():
   }};
 
   var FORM_URL = '{esc(SITE['formspree'])}';
+  var last = null;
   function $(id) {{ return document.getElementById(id); }}
   function num(id) {{ var v = parseFloat($(id).value); return v > 0 ? v : 0; }}
   function eok(v) {{
@@ -547,18 +563,33 @@ def build_limit():
     fd.append('phone', $('cPhone').value.trim());
     fd.append('bizno', bizDigits.replace(/(\\d{{3}})(\\d{{2}})(\\d{{5}})/, '$1-$2-$3'));
     fd.append('calc', summary);
+    last = {{ fd: fd, company: $('cCompany').value.trim(), phone: $('cPhone').value.trim() }};
     fd.append('consent', '개인정보 수집·이용 동의함 (' + new Date().toLocaleString('ko-KR') + ')');
     fd.append('_subject', '[예상 한도] ' + $('cCompany').value.trim() + ' / ' + $('range').textContent);
     fd.append('_source', '예상 한도 계산');
     var btn = calc.querySelector('button[type=submit]');
     btn.disabled = true;
     fetch(FORM_URL, {{ method: 'POST', body: fd, headers: {{ 'Accept': 'application/json' }} }})
-      .then(function (r) {{ if (!r.ok) throw new Error(); $('sendNote').textContent = ''; }})
-      .catch(function () {{ $('sendNote').textContent = '연락처 전송이 원활하지 않았습니다. 상담을 원하시면 상단 상담 신청을 이용해 주세요.'; }})
+      .then(function (r) {{ if (!r.ok) throw new Error(); }})
+      .catch(function () {{}})
       .then(function () {{ btn.disabled = false; }});
     $('result').scrollIntoView({{ behavior: 'smooth', block: 'start' }});
   }});
 
+  $('askBtn').addEventListener('click', function () {{
+    if (!last) return;
+    var btn = $('askBtn');
+    btn.disabled = true; $('askNote').textContent = '보내는 중입니다...';
+    var fd = new FormData();
+    last.fd.forEach(function (v, k) {{ if (k !== '_subject' && k !== '_source') fd.append(k, v); }});
+    fd.append('time', $('askTime').value);
+    fd.append('message', $('askMsg').value.trim());
+    fd.append('_subject', '[상담 신청] ' + last.company + ' / ' + last.phone);
+    fd.append('_source', '예상 한도 계산 → 상담 신청');
+    fetch(FORM_URL, {{ method: 'POST', body: fd, headers: {{ 'Accept': 'application/json' }} }})
+      .then(function (r) {{ if (!r.ok) throw new Error(); $('askBox').hidden = true; $('thanks').hidden = false; }})
+      .catch(function () {{ btn.disabled = false; $('askNote').textContent = '신청이 전송되지 않았습니다. 잠시 후 다시 눌러 주세요.'; }});
+  }});
 }})();
 </script>
 """
