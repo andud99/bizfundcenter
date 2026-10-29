@@ -293,7 +293,7 @@ def build_limit():
       </label>
       <label>업력
         <select id="age" required>
-          <option value="1">3년 미만</option>
+          <option value="1">3년 미만 (결산 3년치 없음)</option>
           <option value="2" selected>3년 이상 7년 미만</option>
           <option value="3">7년 이상</option>
         </select>
@@ -362,8 +362,8 @@ def build_limit():
 (function () {{
   /* ── 산식 설정: 숫자만 고치면 계산이 바뀝니다 ───────────────── */
   var RULES = {{
-    revenueRate: {{ mfg: 0.30, tech: 0.30, whole: 0.15, cons: 0.20, svc: 0.20 }}, // 매출 대비 기본 비율
-    ageCap:      {{ 1: 3, 2: 10, 3: 30 }},       // 업력별 최대치 (억)
+    revenueRate: {{ mfg: 1/4, tech: 0.30, whole: 1/6, cons: 0.20, svc: 0.20 }}, // 매출 대비 기본 비율 (제조 1/4, 도소매 1/6)
+    ageCap:      {{ 1: 3, 2: 10, 3: 30 }},       // 업력별 최대치 (억) — 재무제표 3개년이 없으면(3년 미만) 3억까지
     startupFloor: 1,                            // 업력 7년 미만, 신용 양호 시 최소 기대치 (억)
     scoreRate:   {{ a: 1.0, b: 0.85, c: 0.6, d: 0.3 }}, // 대표 신용점수 반영
     lossRate:    0.7,                           // 적자일 때 반영
