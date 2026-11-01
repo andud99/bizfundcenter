@@ -100,6 +100,7 @@ HEAD = """<!doctype html>
     <a class="brand" href="{base}/">기업자금센터 <span>자금정보</span></a>
     <nav class="nav">
       <a href="{base}/">전체 글</a>
+      <a href="{base}/results/">지원 사례</a>
       <a href="{base}/limit/">한도 계산</a>
       <a href="{home}" rel="noopener">기업자금센터 홈</a>
       <a class="nav-cta" href="{base}/apply/">상담 신청</a>
@@ -596,6 +597,67 @@ def build_limit():
     write("limit/index.html", page(f"예상 운전자금 한도 계산 | {SITE['title']}", "업종, 매출, 신용, 지금 쓰는 정책자금을 넣으면 받을 수 있는 운전자금의 대략적인 범위를 보여드립니다.", FULL + "/limit/", content))
 
 
+def build_results():
+    data = json.loads((ROOT / "data" / "results.json").read_text(encoding="utf-8"))
+    groups = {"mfg": "제조", "trade": "도소매·유통", "svc": "서비스·기타"}
+    icon = {
+        "mfg": '<path d="M14 100V56l26 16V56l26 16V56l26 16V24h14v76z"/><path d="M34 86h10M58 86h10M82 86h10"/>',
+        "trade": '<path d="M18 40l42-20 42 20v44l-42 20-42-20z"/><path d="M18 40l42 20 42-20M60 60v44"/>',
+        "svc": '<rect x="16" y="38" width="88" height="62" rx="6"/><path d="M44 38V26h32v12M16 64h88"/>',
+    }
+    cards = []
+    for d in data:
+        rows = "".join(f'<div class="rs-row"><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>' for k, v in d["fund"])
+        cards.append(f'''<li class="rs-card" data-grp="{d['grp']}">
+  <div class="rs-top rs-{d['grp']}"><svg viewBox="0 0 120 120" aria-hidden="true">{icon[d['grp']]}</svg><span>{groups[d['grp']]}</span></div>
+  <div class="rs-body">
+    <h2>{esc(d['ind'])}</h2>
+    <dl>
+      <div class="rs-row"><dt>위치</dt><dd>{esc(d['loc'])}</dd></div>
+      <div class="rs-row"><dt>매출규모</dt><dd>{esc(d['rev'])}</dd></div>
+      {rows}
+    </dl>
+  </div>
+</li>''')
+    chips = '<button type="button" class="rs-chip" aria-pressed="true" data-f="all">전체</button>' + "".join(
+        f'<button type="button" class="rs-chip" aria-pressed="false" data-f="{k}">{v}</button>' for k, v in groups.items())
+    content = f"""<section class="wrap results">
+  <p class="rs-eyebrow">기업자금센터 진행 사례</p>
+  <h1>이런 회사들이 자금을 마련했습니다</h1>
+  <p class="lead">2026년 상반기 지점에서 진행한 사례 {len(data)}건을 업종과 매출 규모로 정리했습니다. 우리 회사와 비슷한 곳을 찾아보세요.</p>
+  <div class="rs-chips" role="group" aria-label="업종으로 보기">{chips}</div>
+  <ul class="rs-grid" id="rsGrid">
+{''.join(cards)}
+  </ul>
+  <p class="rs-note">업체명과 자세한 진행 내역은 개인정보 보호를 위해 공개하지 않습니다. 같은 조건이라도 결과는 회사 상황, 시기, 기관 판단에 따라 달라집니다.</p>
+  <div class="rs-cta">
+    <div>
+      <h2>우리 회사는 얼마나 가능할까요?</h2>
+      <p>회사 정보 몇 가지로 예상 운전자금 범위를 바로 확인해 보세요.</p>
+    </div>
+    <div class="rs-cta-btns">
+      <a class="btn" href="{BASE}/limit/">예상 한도 계산하기</a>
+      <a class="more" href="{BASE}/c/cases/">사례 이야기 읽기</a>
+    </div>
+  </div>
+</section>
+<script>
+(function () {{
+  var chips = document.querySelectorAll('.rs-chip');
+  var cards = document.querySelectorAll('.rs-card');
+  chips.forEach(function (c) {{
+    c.addEventListener('click', function () {{
+      chips.forEach(function (x) {{ x.setAttribute('aria-pressed', x === c ? 'true' : 'false'); }});
+      var f = c.dataset.f;
+      cards.forEach(function (k) {{ k.hidden = !(f === 'all' || k.dataset.grp === f); }});
+    }});
+  }});
+}})();
+</script>
+"""
+    write("results/index.html", page(f"지원 사례 모음 | {SITE['title']}", f"기업자금센터가 2026년 상반기에 진행한 자금 사례 {len(data)}건. 업종, 지역, 매출 규모별로 어떤 자금을 얼마나 마련했는지 확인해 보세요.", FULL + "/results/", content))
+
+
 def build_widget(posts):
     items = "".join(
         f'<li><a href="{FULL}/p/{p["slug"]}/" target="_top"><span>{esc(p["category"])}</span>{esc(p["title"])}</a><time>{p["date"]:%Y.%m.%d}</time></li>'
@@ -644,7 +706,7 @@ def build_feed(posts):
 <description>{esc(SITE['description'])}</description><language>ko</language><lastBuildDate>{now}</lastBuildDate>
 {items}</channel></rss>
 """)
-    urls = [f"{FULL}/", f"{FULL}/apply/", f"{FULL}/limit/"] + [f"{FULL}/p/{p['slug']}/" for p in posts]
+    urls = [f"{FULL}/", f"{FULL}/apply/", f"{FULL}/limit/", f"{FULL}/results/"] + [f"{FULL}/p/{p['slug']}/" for p in posts]
     urls += [f"{FULL}/c/{v}/" for v in CATEGORIES.values()]
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
           + "".join(f"<url><loc>{u}</loc></url>\n" for u in urls) + "</urlset>\n")
@@ -677,6 +739,7 @@ def main():
         build_post(p, posts)
     build_apply()
     build_limit()
+    build_results()
     build_widget(posts)
     build_feed(posts)
     (ROOT / ".nojekyll").touch()
