@@ -609,7 +609,7 @@ def build_results():
     for d in data:
         rows = "".join(f'<div class="rs-row"><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>' for k, v in d["fund"])
         cards.append(f'''<li class="rs-card" data-grp="{d['grp']}">
-  <div class="rs-top rs-{d['grp']}"><svg viewBox="0 0 120 120" aria-hidden="true">{icon[d['grp']]}</svg><span>{groups[d['grp']]}</span></div>
+  <div class="rs-top"><img src="{BASE}/assets/results/{d['img']}.jpg" alt="{esc(d['ind'])} 참고 이미지" loading="lazy" width="1024" height="560" style="object-position:{d['pos']} center{';transform:scaleX(-1)' if d['flip'] else ''}"><span class="rs-tag rs-{d['grp']}">{groups[d['grp']]}</span></div>
   <div class="rs-body">
     <h2>{esc(d['ind'])}</h2>
     <dl>
@@ -629,7 +629,7 @@ def build_results():
   <ul class="rs-grid" id="rsGrid">
 {''.join(cards)}
   </ul>
-  <p class="rs-note">업체명과 자세한 진행 내역은 개인정보 보호를 위해 공개하지 않습니다. 같은 조건이라도 결과는 회사 상황, 시기, 기관 판단에 따라 달라집니다.</p>
+  <p class="rs-note">업체명과 자세한 진행 내역은 개인정보 보호를 위해 공개하지 않습니다. 같은 조건이라도 결과는 회사 상황, 시기, 기관 판단에 따라 달라집니다.<br>사진은 이해를 돕기 위해 AI로 만든 참고 이미지이며, 실제 고객사와 관련이 없습니다.</p>
   <div class="rs-cta">
     <div>
       <h2>우리 회사는 얼마나 가능할까요?</h2>
