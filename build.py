@@ -80,6 +80,7 @@ HEAD = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="naver-site-verification" content="d2a2f0fcdc7f80510ab42e256d2caefc279a14d4" />
+<meta name="google-site-verification" content="44HQXpzdSIIOnvWg4qA-urNnDeNAu5dnSopqffZYgrE" />
 <title>{title}</title>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="{canonical}">
