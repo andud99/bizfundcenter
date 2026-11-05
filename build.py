@@ -291,11 +291,11 @@ def build_limit():
       <h1>운전자금,<br>우리 회사는 <em>얼마까지</em> 될까요?</h1>
       <p class="lim-sub">매출과 업종, 지금 쓰고 있는 자금만 넣으면 <br>받을 수 있는 운전자금의 <b>예상 범위</b>를 바로 보여드립니다. <br>결산이 바뀌기 전에 미리 확인해 두세요.</p>
       <ul class="lim-stats">
-        <li><span>상반기 진행 사례</span><b>{n_cases}<small>건</small></b></li>
-        <li><span>상반기 자금 합계</span><b>{sum_eok}<small>억 원</small></b></li>
-        <li><span>기업자금 현장</span><b>{years}<small>년째</small></b></li>
+        <li><span>상반기 진행 사례</span><b>120<small>건</small></b></li>
+        <li><span>상반기 자금 합계</span><b>370<small>억 원</small></b></li>
+        <li><span>기업자금 현장</span><b class="lim-since">SINCE 2013</b></li>
       </ul>
-      <p class="lim-statnote">2026년 상반기 지점 진행 사례 기준 · 2013년부터</p>
+      <p class="lim-statnote">2026년 상반기 기업자금센터 진행 기준</p>
     </div>
 
     <div class="lim-card" id="calcCard">

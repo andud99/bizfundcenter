@@ -323,3 +323,5 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .lim-stats b { font-size: 22px; }
   .lim-svc-grid { grid-template-columns: 1fr; }
 }
+.lim-stats b.lim-since { font-size: 19px; letter-spacing: .02em; padding-top: 5px; }
+@media (max-width: 560px) { .lim-stats b.lim-since { font-size: 15px; } }
