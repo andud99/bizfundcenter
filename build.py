@@ -148,7 +148,6 @@ def chip(cat):
 
 def row(p):
     return f"""<li class="row">
-  <time datetime="{p['date']:%Y-%m-%d}">{p['date'].month}.{p['date'].day}<small>{WEEKDAYS[p['date'].weekday()]}</small></time>
   <div>
     {chip(p['category'])}
     <h3><a href="{p['url']}">{esc(p['title'])}</a></h3>
@@ -178,7 +177,7 @@ def build_list_page(posts, heading, lead, canonical, out):
     if posts:
         first, rest = posts[0], posts[1:]
         feature = f"""<article class="feature">
-  <div class="feature-meta">{chip(first['category'])}<time datetime="{first['date']:%Y-%m-%d}">{fmt_date(first['date'])}</time></div>
+  <div class="feature-meta">{chip(first['category'])}</div>
   <h2><a href="{first['url']}">{esc(first['title'])}</a></h2>
   <p>{esc(first['description'])}</p>
   <a class="more" href="{first['url']}">읽기 · {first['minutes']}분</a>
@@ -735,7 +734,7 @@ def build_results():
 
 def build_widget(posts):
     items = "".join(
-        f'<li><a href="{FULL}/p/{p["slug"]}/" target="_top"><span>{esc(p["category"])}</span>{esc(p["title"])}</a><time>{p["date"]:%Y.%m.%d}</time></li>'
+        f'<li><a href="{FULL}/p/{p["slug"]}/" target="_top"><span>{esc(p["category"])}</span>{esc(p["title"])}</a></li>'
         for p in posts[:4]
     )
     w = f"""<!doctype html>

@@ -89,7 +89,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .chip-notice { background: var(--navy); color: var(--white); }
 
 .ledger { list-style: none; margin: 32px 0 0; padding: 0; border-top: 1px solid var(--navy); }
-.row { display: grid; grid-template-columns: 64px 1fr; gap: 16px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+.row { padding: 22px 0; border-bottom: 1px solid var(--line); }
 .row time { font-family: var(--serif); font-size: 22px; font-weight: 600; line-height: 1.2; font-variant-numeric: tabular-nums; }
 .row time small { display: block; font-family: var(--sans); font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 4px; }
 .row h3 { font-size: 19px; line-height: 1.45; margin: 8px 0 4px; letter-spacing: -0.01em; }
@@ -169,7 +169,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .strip li + li { padding-left: 6px; }
   .strip b { font-size: 18px; }
   .feature { padding: 22px 20px; }
-  .row { grid-template-columns: 48px 1fr; gap: 12px; }
   .row time { font-size: 19px; }
   .nav { gap: 12px; font-size: 14px; }
   .nav a[rel="noopener"] { display: none; }
