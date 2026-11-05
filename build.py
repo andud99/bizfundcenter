@@ -278,121 +278,155 @@ def build_apply():
 
 
 def build_limit():
-    content = f"""<section class="wrap apply limit">
-  <h1>예상 운전자금 한도 계산</h1>
-  <p class="lead">회사 정보를 넣으면 지금 받을 수 있는 운전자금의 대략적인 범위를 보여드립니다. 공장·설비 같은 시설자금은 따로 봐야 합니다. 입력한 내용은 저장되지 않습니다.</p>
-  <form id="calcForm" novalidate>
-    <p class="lim-step">1. 회사 기본 정보</p>
-    <fieldset class="lim-grid">
-      <label>업종
-        <select id="ind">
-          <option value="mfg">제조</option>
-          <option value="tech">IT·소프트웨어·지식서비스</option>
-          <option value="whole">도소매·유통</option>
-          <option value="cons">건설·공사</option>
-          <option value="svc">음식·숙박·기타 서비스</option>
-        </select>
-      </label>
-      <label>업력
-        <select id="age">
-          <option value="1">3년 미만 (결산 3년치 없음)</option>
-          <option value="2" selected>3년 이상 7년 미만</option>
-          <option value="3">7년 이상</option>
-        </select>
-      </label>
-      <label>소재지
-        <select id="region">
-          <option value="cap">수도권 (서울·경기·인천)</option>
-          <option value="local">지방</option>
-        </select>
-      </label>
-      <label>최근 1년 매출 (억 원)<input id="rev" type="number" min="0" step="0.1" inputmode="decimal" placeholder="예: 25"></label>
-      <label>상시 직원 수 (명)<input id="emp" type="number" min="0" step="1" inputmode="numeric" placeholder="대표 제외"></label>
-      <label>최근 결산 영업이익
-        <select id="profit"><option value="plus">흑자</option><option value="minus">적자</option></select>
-      </label>
-      <label>연평균 수출액 (만 달러)<input id="exp" type="number" min="0" step="1" inputmode="numeric" placeholder="없으면 0" value="0"></label>
-    </fieldset>
-
-    <p class="lim-step">2. 신용</p>
-    <fieldset class="lim-grid">
-      <label>대표님 개인 신용점수
-        <select id="score">
-          <option value="a">840점 이상</option>
-          <option value="b" selected>740~839점</option>
-          <option value="c">640~739점</option>
-          <option value="d">640점 미만</option>
-          <option value="b">잘 모르겠음</option>
-        </select>
-      </label>
-      <label>회사 신용등급 (크레탑 등)
-        <select id="grade">
-          <option value="0">잘 모르겠음</option>
-          <option value="0">B 이하</option>
-          <option value="1">B+ ~ BB</option>
-          <option value="2">BB+ 이상</option>
-        </select>
-      </label>
-    </fieldset>
-
-    <p class="lim-step">3. 지금 쓰고 있는 정책자금</p>
-    <fieldset class="lim-grid">
-      <label>신보·기보 이용 금액 (억 원, 둘 합계)<input id="useA" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
-      <label>지역 재단 이용 금액 (억 원)<input id="useB" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
-      <label>중진공 운전자금 이용 금액 (억 원)<input id="useCamt" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
-      <label>중진공 직접대출 받은 횟수
-        <select id="useC">
-          <option value="0">받은 적 없음</option>
-          <option value="1">1~2회 (올해는 아직)</option>
-          <option value="y">올해 이미 받음</option>
-          <option value="3">3회 모두 받음</option>
-        </select>
-      </label>
-      <label>소진공 직접대출 이용 금액 (억 원)<input id="useD" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
-    </fieldset>
-
-    <p class="lim-step">4. 해당 사항</p>
-    <fieldset class="lim-checks">
-      <label><input type="checkbox" name="cert">벤처기업</label>
-      <label><input type="checkbox" name="cert">이노비즈·메인비즈</label>
-      <label><input type="checkbox" name="cert">기업부설연구소·전담부서</label>
-      <label><input type="checkbox" name="cert">특허</label>
-      <label><input type="checkbox" id="lead">유망·선도 업종 (신성장·혁신 분야 등)</label>
-      <label><input type="checkbox" id="ipsales">매출 비중이 큰 특허 (특허 제품 매출이 큼)</label>
-      <label><input type="checkbox" id="agri">농수산물을 원료로 제조</label>
-      <label><input type="checkbox" id="land">회사나 대표님 명의 부동산 있음</label>
-      <label><input type="checkbox" id="tax">밀린 세금(부가세·4대보험 등) 있음</label>
-    </fieldset>
-    <p class="lim-step">5. 결과 받으실 연락처</p>
-    <fieldset class="lim-grid">
-      <label>성함<input id="cName" type="text" autocomplete="name" required></label>
-      <label>회사명<input id="cCompany" type="text" autocomplete="organization" required></label>
-      <label>연락처<input id="cPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="010-0000-0000" required></label>
-      <label>사업자등록번호<input id="cBiz" type="text" inputmode="numeric" placeholder="000-00-00000" maxlength="12" required></label>
-    </fieldset>
-    <div class="lim-consent">
-      <label><input type="checkbox" id="cAgree" required> 개인정보 수집·이용에 동의합니다 (필수)</label>
-      <details>
-        <summary>내용 보기</summary>
-        <ul>
-          <li>수집 항목: 성함, 회사명, 연락처, 사업자등록번호, 이 화면에 입력한 회사 정보</li>
-          <li>수집 목적: 예상 한도 안내 및 자금 상담 연락</li>
-          <li>보유 기간: 수집일로부터 1년. 기간이 지나거나 삭제를 요청하시면 지체 없이 파기합니다.</li>
-          <li>처리 위탁: 접수 내용은 양식 전송 서비스(Formspree, 미국)를 거쳐 기업자금센터 담당자 메일로 전달됩니다.</li>
-          <li>동의를 거부할 수 있으며, 거부하시면 예상 한도 결과를 보실 수 없습니다.</li>
-        </ul>
-      </details>
+    _d = json.loads((ROOT / "data" / "results.json").read_text(encoding="utf-8"))
+    def _eok(v):
+        return float(v.replace("억", "")) if "억" in v else float(v.replace("천만", "").replace("천", "")) * 0.1
+    n_cases = len(_d)
+    sum_eok = int(sum(_eok(f[1]) for x in _d for f in x["fund"]))
+    years = datetime.now(KST).year - 2013
+    content = f"""<section class="lim-hero">
+  <div class="lim-hero-in">
+    <div class="lim-copy">
+      <p class="lim-badge">무료 한도 점검</p>
+      <h1>운전자금,<br>우리 회사는 <em>얼마까지</em> 될까요?</h1>
+      <p class="lim-sub">매출과 업종, 지금 쓰고 있는 자금만 넣으면 <br>받을 수 있는 운전자금의 <b>예상 범위</b>를 바로 보여드립니다. <br>결산이 바뀌기 전에 미리 확인해 두세요.</p>
+      <ul class="lim-stats">
+        <li><span>상반기 진행 사례</span><b>{n_cases}<small>건</small></b></li>
+        <li><span>상반기 자금 합계</span><b>{sum_eok}<small>억 원</small></b></li>
+        <li><span>기업자금 현장</span><b>{years}<small>년째</small></b></li>
+      </ul>
+      <p class="lim-statnote">2026년 상반기 지점 진행 사례 기준 · 2013년부터</p>
     </div>
-    <button class="btn" type="submit">예상 한도 보기</button>
-    <p class="form-note" id="calcNote" role="status"></p>
-  </form>
 
+    <div class="lim-card" id="calcCard">
+      <div class="lim-card-head">
+        <p class="lim-chip-dark">예상 운전자금 계산</p>
+        <ol class="lim-prog" aria-label="진행 단계"><li class="on">회사</li><li>자금 이용</li><li>연락처</li></ol>
+      </div>
+      <form id="calcForm" novalidate>
+        <div class="lim-page" data-page="1">
+          <div class="lim-field"><p class="lim-q">업종</p>
+            <div class="lim-chips" role="radiogroup">
+              <label><input type="radio" name="ind" value="mfg" checked><span>제조</span></label>
+              <label><input type="radio" name="ind" value="tech"><span>IT·지식서비스</span></label>
+              <label><input type="radio" name="ind" value="whole"><span>도소매·유통</span></label>
+              <label><input type="radio" name="ind" value="cons"><span>건설·공사</span></label>
+              <label><input type="radio" name="ind" value="svc"><span>음식·기타 서비스</span></label>
+            </div>
+          </div>
+          <div class="lim-field"><p class="lim-q">업력</p>
+            <div class="lim-chips c3" role="radiogroup">
+              <label><input type="radio" name="age" value="1"><span>3년 미만</span></label>
+              <label><input type="radio" name="age" value="2" checked><span>3~7년</span></label>
+              <label><input type="radio" name="age" value="3"><span>7년 이상</span></label>
+            </div>
+          </div>
+          <div class="lim-field"><p class="lim-q">소재지</p>
+            <div class="lim-chips c2" role="radiogroup">
+              <label><input type="radio" name="region" value="cap" checked><span>수도권</span></label>
+              <label><input type="radio" name="region" value="local"><span>지방</span></label>
+            </div>
+          </div>
+          <div class="lim-row2">
+            <label class="lim-in"><span>최근 1년 매출 <small>(억 원)</small></span><input id="rev" type="number" min="0" step="0.1" inputmode="decimal" placeholder="예: 25"></label>
+            <label class="lim-in"><span>상시 직원 수 <small>(명)</small></span><input id="emp" type="number" min="0" step="1" inputmode="numeric" placeholder="대표 제외"></label>
+          </div>
+          <div class="lim-field"><p class="lim-q">최근 결산</p>
+            <div class="lim-chips c2" role="radiogroup">
+              <label><input type="radio" name="profit" value="plus" checked><span>흑자</span></label>
+              <label><input type="radio" name="profit" value="minus"><span>적자</span></label>
+            </div>
+          </div>
+          <button class="lim-next" type="button" data-go="2">다음</button>
+        </div>
+
+        <div class="lim-page" data-page="2" hidden>
+          <div class="lim-field"><p class="lim-q">대표님 개인 신용점수</p>
+            <div class="lim-chips c2" role="radiogroup">
+              <label><input type="radio" name="score" value="a"><span>840점 이상</span></label>
+              <label><input type="radio" name="score" value="b" checked><span>740~839점</span></label>
+              <label><input type="radio" name="score" value="c"><span>640~739점</span></label>
+              <label><input type="radio" name="score" value="d"><span>640점 미만</span></label>
+            </div>
+          </div>
+          <div class="lim-row2">
+            <label class="lim-in">회사 신용등급
+              <select id="grade">
+                <option value="0">잘 모르겠음</option>
+                <option value="0">B 이하</option>
+                <option value="1">B+ ~ BB</option>
+                <option value="2">BB+ 이상</option>
+              </select>
+            </label>
+            <label class="lim-in"><span>연평균 수출액 <small>(만 달러)</small></span><input id="exp" type="number" min="0" step="1" inputmode="numeric" value="0"></label>
+          </div>
+          <p class="lim-q">지금 쓰고 있는 정책자금 <small>(없으면 0)</small></p>
+          <div class="lim-row2">
+            <label class="lim-in"><span>신보·기보 합계 <small>(억)</small></span><input id="useA" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
+            <label class="lim-in"><span>지역 재단 <small>(억)</small></span><input id="useB" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
+            <label class="lim-in"><span>중진공 운전자금 <small>(억)</small></span><input id="useCamt" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
+            <label class="lim-in"><span>소진공 직접대출 <small>(억)</small></span><input id="useD" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
+          </div>
+          <label class="lim-in">중진공 직접대출 받은 횟수
+            <select id="useC">
+              <option value="0">받은 적 없음</option>
+              <option value="1">1~2회 (올해는 아직)</option>
+              <option value="y">올해 이미 받음</option>
+              <option value="3">3회 모두 받음</option>
+            </select>
+          </label>
+          <p class="lim-q">해당하는 것 모두</p>
+          <div class="lim-tags">
+            <label><input type="checkbox" name="cert"><span>벤처기업</span></label>
+            <label><input type="checkbox" name="cert"><span>이노비즈·메인비즈</span></label>
+            <label><input type="checkbox" name="cert"><span>기업부설연구소</span></label>
+            <label><input type="checkbox" name="cert"><span>특허</span></label>
+            <label><input type="checkbox" id="ipsales"><span>매출 비중이 큰 특허</span></label>
+            <label><input type="checkbox" id="lead"><span>유망·선도 업종</span></label>
+            <label><input type="checkbox" id="agri"><span>농수산물 원료 제조</span></label>
+            <label><input type="checkbox" id="land"><span>부동산 보유</span></label>
+            <label><input type="checkbox" id="tax"><span>밀린 세금 있음</span></label>
+          </div>
+          <div class="lim-nav"><button class="lim-back" type="button" data-go="1">이전</button><button class="lim-next" type="button" data-go="3">다음</button></div>
+        </div>
+
+        <div class="lim-page" data-page="3" hidden>
+          <p class="lim-q">결과 받으실 연락처</p>
+          <div class="lim-row2">
+            <label class="lim-in">성함<input id="cName" type="text" autocomplete="name" placeholder="대표자 성함"></label>
+            <label class="lim-in">회사명<input id="cCompany" type="text" autocomplete="organization"></label>
+            <label class="lim-in">연락처<input id="cPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="010-0000-0000"></label>
+            <label class="lim-in">사업자등록번호<input id="cBiz" type="text" inputmode="numeric" placeholder="000-00-00000" maxlength="12"></label>
+          </div>
+          <div class="lim-consent">
+            <label><input type="checkbox" id="cAgree"> 개인정보 수집·이용에 동의합니다 (필수)</label>
+            <details>
+              <summary>내용 보기</summary>
+              <ul>
+                <li>수집 항목: 성함, 회사명, 연락처, 사업자등록번호, 이 화면에 입력한 회사 정보</li>
+                <li>수집 목적: 예상 한도 안내 및 자금 상담 연락</li>
+                <li>보유 기간: 수집일로부터 1년. 기간이 지나거나 삭제를 요청하시면 지체 없이 파기합니다.</li>
+                <li>처리 위탁: 접수 내용은 양식 전송 서비스(Formspree, 미국)를 거쳐 기업자금센터 담당자 메일로 전달됩니다.</li>
+                <li>동의를 거부할 수 있으며, 거부하시면 예상 한도 결과를 보실 수 없습니다.</li>
+              </ul>
+            </details>
+          </div>
+          <div class="lim-nav"><button class="lim-back" type="button" data-go="2">이전</button><button class="btn lim-submit" type="submit">예상 한도 보기</button></div>
+        </div>
+        <p class="form-note" id="calcNote" role="status"></p>
+      </form>
+      <p class="lim-foot">상담 비용 0원 · 입력하신 정보는 상담 목적으로만 사용됩니다</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap lim-after">
   <div id="result" class="lim-result" hidden>
     <p class="lim-eyebrow">예상 운전자금 한도</p>
     <p class="lim-range" id="range"></p>
     <p class="lim-doors" id="doors"></p>
     <ul class="lim-notes" id="notes"></ul>
-    <p class="lim-disc">입력하신 정보로 계산한 참고용 범위입니다. 실제 금액은 재무제표, 기존 거래, 신청 시기와 기관 판단에 따라 달라집니다.</p>
+    <p class="lim-disc">입력하신 정보로 계산한 참고용 범위입니다. 실제 금액은 재무제표, 기존 거래, 신청 시기와 기관 판단에 따라 달라집니다. 공장·설비 같은 시설자금은 따로 봐야 합니다.</p>
   </div>
 
   <div id="detail" class="lim-detail" hidden>
@@ -413,8 +447,33 @@ def build_limit():
     <div id="thanks" class="thanks" hidden>
       <h2>상담 신청이 접수되었습니다</h2>
       <p>담당자가 확인 후 영업일 기준 1~2일 안에 연락드립니다.</p>
-      <a class="more" href="{BASE}/c/cases/">현장 사례 읽기</a>
+      <a class="more" href="{BASE}/results/">지원 사례 보기</a>
     </div>
+  </div>
+</section>
+
+<section class="lim-svc">
+  <div class="wrap lim-svc-in">
+    <p class="lim-eyebrow2">ONE-STOP</p>
+    <h2>운전자금만이 아닙니다</h2>
+    <p class="lim-svc-lead">자금은 시작일 뿐입니다. 회사 구조와 세금까지 함께 보고, 맞는 순서로 진행합니다.</p>
+    <ul class="lim-svc-grid">
+      <li><b>운전자금</b><span>원자재·인건비처럼 회사가 돌아가는 데 필요한 자금</span></li>
+      <li><b>시설자금</b><span>공장·기계설비 구입과 증설 자금</span></li>
+      <li><b>기술·특허자금</b><span>특허와 기술력을 평가받아 연결하는 자금</span></li>
+      <li><b>수출자금</b><span>수출 실적이 있는 기업을 위한 별도 자금</span></li>
+      <li><b>기업인증</b><span>벤처·이노비즈·메인비즈·연구소 설립</span></li>
+      <li><b>세금·구조</b><span>가지급금, 법인전환, 재무구조 개선</span></li>
+    </ul>
+    <a class="lim-svc-btn" href="{BASE}/results/">진행 사례 보기</a>
+  </div>
+</section>
+
+<section class="lim-band">
+  <div class="wrap">
+    <h2>같은 회사라도,<br>순서에 따라 결과가 달라집니다</h2>
+    <p>어느 기관에 먼저 들어가느냐, 결산 전후 언제 신청하느냐. <br>우리 회사에 맞는 순서를 무료로 점검해 드립니다.</p>
+    <a class="btn" href="#calcCard">지금 무료로 계산하기</a>
   </div>
 </section>
 <script>
@@ -446,7 +505,8 @@ def build_limit():
     if (v < 1) return Math.round(v * 10) * 1000 + '만 원';
     return (Math.round(v * 10) / 10).toString().replace(/\\.0$/, '') + '억 원';
   }}
-  function txt(id) {{ return $(id).selectedOptions[0].text; }}
+  function val(n) {{ var r = document.querySelector('input[name="' + n + '"]:checked'); return r ? r.value : $(n).value; }}
+  function txt(n) {{ var r = document.querySelector('input[name="' + n + '"]:checked'); return r ? r.nextElementSibling.textContent : $(n).selectedOptions[0].text; }}
   function validBiz(d) {{
     if (!/^\\d{{10}}$/.test(d)) return false;
     var w = [1, 3, 7, 1, 3, 7, 1, 3, 5], sum = 0;
@@ -456,10 +516,23 @@ def build_limit():
   }}
 
   var calc = $('calcForm');
+  function go(n) {{
+    calc.querySelectorAll('.lim-page').forEach(function (pg) {{ pg.hidden = pg.dataset.page !== String(n); }});
+    document.querySelectorAll('.lim-prog li').forEach(function (li, i) {{ li.classList.toggle('on', i < n); }});
+    $('calcNote').textContent = '';
+  }}
+  calc.querySelectorAll('[data-go]').forEach(function (b) {{
+    b.addEventListener('click', function () {{
+      var n = Number(b.dataset.go);
+      if (n === 2 && !(parseFloat($('rev').value) >= 0)) {{ $('calcNote').textContent = '최근 1년 매출을 숫자로 넣어 주세요.'; $('rev').focus(); return; }}
+      go(n);
+      $('calcCard').scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+    }});
+  }});
   calc.addEventListener('submit', function (e) {{
     e.preventDefault();
     var rev = parseFloat($('rev').value);
-    if (!(rev >= 0)) {{ $('calcNote').textContent = '최근 1년 매출을 숫자로 넣어 주세요.'; $('rev').focus(); return; }}
+    if (!(rev >= 0)) {{ go(1); $('calcNote').textContent = '최근 1년 매출을 숫자로 넣어 주세요.'; $('rev').focus(); return; }}
     var bizDigits = $('cBiz').value.replace(/\\D/g, '');
     var phoneDigits = $('cPhone').value.replace(/\\D/g, '');
     if (!$('cName').value.trim()) {{ $('calcNote').textContent = '성함을 넣어 주세요.'; $('cName').focus(); return; }}
@@ -469,11 +542,11 @@ def build_limit():
     if (!$('cAgree').checked) {{ $('calcNote').textContent = '개인정보 수집·이용에 동의하셔야 결과를 보실 수 있습니다.'; $('cAgree').focus(); return; }}
     $('calcNote').textContent = '';
 
-    var ind = $('ind').value, age = $('age').value, sc = $('score').value, grade = $('grade').value;
+    var ind = val('ind'), age = val('age'), sc = val('score'), grade = $('grade').value;
     var emp = num('emp'), exp = num('exp'), useA = num('useA'), useB = num('useB');
-    var useC = $('useC').value, useD = num('useD'), region = $('region').value;
+    var useC = $('useC').value, useD = num('useD'), region = val('region');
     var certs = calc.querySelectorAll('input[name=cert]:checked').length;
-    var loss = $('profit').value === 'minus';
+    var loss = val('profit') === 'minus';
     var adj = R.score[sc] * (loss ? R.loss : 1);
 
     // 갈래 A
