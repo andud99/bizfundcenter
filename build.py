@@ -456,7 +456,7 @@ def build_limit():
 <section class="lim-svc">
   <div class="wrap lim-svc-in">
     <p class="lim-eyebrow2">ONE-STOP</p>
-    <h2>자금부터 세금·구조까지, 한 곳에서</h2>
+    <h2>한 번의 상담으로 자금·세금·구조까지</h2>
     <p class="lim-svc-lead">필요한 자금을 마련하는 데서 끝나지 않습니다. 회사 구조와 세금까지 함께 보고, 맞는 순서로 진행합니다.</p>
     <ul class="lim-svc-grid">
       <li><b>운전자금</b><span>원자재·인건비처럼 회사가 돌아가는 데 필요한 자금</span></li>
