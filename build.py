@@ -289,7 +289,7 @@ def build_limit():
   <div class="lim-hero-in">
     <div class="lim-copy">
       <p class="lim-badge">무료 한도 점검</p>
-      <h1>운전자금,<br>우리 회사는 <em>얼마까지</em> 될까요?</h1>
+      <h1>기업자금,<br>우리 회사는 <em>얼마까지</em> 될까요?</h1>
       <p class="lim-sub">매출과 업종, 지금 쓰고 있는 자금만 넣으면 <br>받을 수 있는 운전자금의 <b>예상 범위</b>를 바로 보여드립니다. <br>결산이 바뀌기 전에 미리 확인해 두세요.</p>
       <ul class="lim-stats">
         <li><span>상반기 진행 사례</span><b>120<small>건</small></b></li>
