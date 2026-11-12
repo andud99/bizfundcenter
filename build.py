@@ -741,38 +741,24 @@ def build_careers():
       <h1>전문가와 함께하는<br><em>성장</em>을 시작하세요</h1>
       <p class="lim-sub">기업자금센터는 중소기업 대표님과 마주 앉아 <br>자금·세금·구조 전략을 함께 설계하는 팀입니다. <br>체계적인 교육과 보상 속에서 함께 성장할 분을 찾습니다.</p>
       <ul class="lim-stats">
+        <li><span>평균 월 소득<br><small>(세후)</small></span><b>900<small>만 원~</small></b></li>
+        <li><span>상반기 자금 진행</span><b>370<small>억 원</small></b></li>
         <li><span>기업자금 현장</span><b class="lim-since">SINCE 2013</b></li>
-        <li><span>함께하는 전문가</span><b>9<small>명</small></b></li>
-        <li><span>상반기 진행 사례</span><b>120<small>건</small></b></li>
       </ul>
+      <p class="lim-statnote">평균 소득·진행 금액은 기업자금센터 내부 집계 기준이며, 개인 성과에 따라 달라집니다.</p>
       <figure class="cr-photo"><img src="{BASE}/assets/careers/1.jpg" alt="기업자금센터 채용 이미지" width="1024" height="1024"></figure>
     </div>
 
     <div class="lim-card" id="applyCard">
       <div class="lim-card-head">
-        <p class="lim-chip-dark">입사 지원</p>
-        <ol class="lim-prog" aria-label="진행 단계"><li class="on">기본 정보</li><li>경력·지원 동기</li></ol>
+        <p class="lim-chip-dark">1분 입사 지원</p>
       </div>
       <form id="crForm" novalidate>
-        <div class="lim-page" data-page="1">
-          <div class="lim-row2">
-            <label class="lim-in">성함<input id="crName" type="text" autocomplete="name"></label>
-            <label class="lim-in">연락처<input id="crPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="010-0000-0000"></label>
-          </div>
-          <div class="lim-field"><p class="lim-q">나이대</p>
-            <div class="lim-chips c3" role="radiogroup">
-              <label><input type="radio" name="crAge" value="20대" checked><span>20대</span></label>
-              <label><input type="radio" name="crAge" value="30대"><span>30대</span></label>
-              <label><input type="radio" name="crAge" value="40대"><span>40대</span></label>
-              <label><input type="radio" name="crAge" value="50대"><span>50대</span></label>
-              <label><input type="radio" name="crAge" value="60대 이상"><span>60대 이상</span></label>
-            </div>
-          </div>
+        <div class="lim-page">
+          <label class="lim-in">성함<input id="crName" type="text" autocomplete="name"></label>
+          <label class="lim-in">연락처<input id="crPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="010-0000-0000"></label>
+          <label class="lim-in">생년월일<input id="crBirth" type="text" inputmode="numeric" placeholder="예: 1985-03-12" maxlength="10"></label>
           <label class="lim-in">거주 지역<input id="crRegion" type="text" placeholder="예: 서울 마포구, 경기 고양시"></label>
-          <button class="lim-next" type="button" data-go="2">다음</button>
-        </div>
-
-        <div class="lim-page" data-page="2" hidden>
           <p class="lim-q">관련 경력 <small>(해당하는 것 모두)</small></p>
           <div class="lim-tags">
             <label><input type="checkbox" name="crExp" value="금융·은행"><span>금융·은행</span></label>
@@ -782,21 +768,13 @@ def build_careers():
             <label><input type="checkbox" name="crExp" value="컨설팅"><span>컨설팅</span></label>
             <label><input type="checkbox" name="crExp" value="관련 경력 없음"><span>관련 경력 없음</span></label>
           </div>
-          <div class="lim-field"><p class="lim-q">총 경력</p>
-            <div class="lim-chips c2" role="radiogroup">
-              <label><input type="radio" name="crYears" value="신입" checked><span>신입</span></label>
-              <label><input type="radio" name="crYears" value="1~3년"><span>1~3년</span></label>
-              <label><input type="radio" name="crYears" value="3~10년"><span>3~10년</span></label>
-              <label><input type="radio" name="crYears" value="10년 이상"><span>10년 이상</span></label>
-            </div>
-          </div>
-          <label class="lim-in">지원 동기 <small>(선택)</small><textarea id="crMsg" rows="3" placeholder="간단히 적어 주세요"></textarea></label>
+          <label class="lim-in"><span>지원 동기 <small>(선택)</small></span><textarea id="crMsg" rows="3" placeholder="간단히 적어 주세요"></textarea></label>
           <div class="lim-consent">
             <label><input type="checkbox" id="crAgree"> 개인정보 수집·이용에 동의합니다 (필수)</label>
             <details>
               <summary>내용 보기</summary>
               <ul>
-                <li>수집 항목: 성함, 연락처, 나이대, 거주 지역, 경력, 지원 동기</li>
+                <li>수집 항목: 성함, 연락처, 생년월일, 거주 지역, 경력, 지원 동기</li>
                 <li>수집 목적: 입사 지원 검토 및 면접 안내 연락</li>
                 <li>보유 기간: 수집일로부터 1년. 기간이 지나거나 삭제를 요청하시면 지체 없이 파기합니다.</li>
                 <li>처리 위탁: 접수 내용은 양식 전송 서비스(Formspree, 미국)를 거쳐 기업자금센터 담당자 메일로 전달됩니다.</li>
@@ -804,7 +782,7 @@ def build_careers():
               </ul>
             </details>
           </div>
-          <div class="lim-nav"><button class="lim-back" type="button" data-go="1">이전</button><button class="btn lim-submit" type="submit">지원서 보내기</button></div>
+          <button class="btn lim-submit" type="submit">지원서 보내기</button>
         </div>
         <p class="form-note" id="crNote" role="status"></p>
       </form>
@@ -849,39 +827,27 @@ def build_careers():
   function $(id) {{ return document.getElementById(id); }}
   function val(n) {{ var r = document.querySelector('input[name="' + n + '"]:checked'); return r ? r.value : ''; }}
   var form = $('crForm');
-  function go(n) {{
-    form.querySelectorAll('.lim-page').forEach(function (pg) {{ pg.hidden = pg.dataset.page !== String(n); }});
-    document.querySelectorAll('#applyCard .lim-prog li').forEach(function (li, i) {{ li.classList.toggle('on', i < n); }});
-    $('crNote').textContent = '';
-  }}
-  function check1() {{
+  function check() {{
     if (!$('crName').value.trim()) {{ $('crNote').textContent = '성함을 넣어 주세요.'; $('crName').focus(); return false; }}
     if ($('crPhone').value.replace(/\\D/g, '').length < 9) {{ $('crNote').textContent = '연락 가능한 번호를 넣어 주세요.'; $('crPhone').focus(); return false; }}
+    if ($('crBirth').value.replace(/\\D/g, '').length !== 8) {{ $('crNote').textContent = '생년월일 8자리를 넣어 주세요. 예: 1985-03-12'; $('crBirth').focus(); return false; }}
     return true;
   }}
-  form.querySelectorAll('[data-go]').forEach(function (b) {{
-    b.addEventListener('click', function () {{
-      var n = Number(b.dataset.go);
-      if (n === 2 && !check1()) return;
-      go(n);
-      $('applyCard').scrollIntoView({{ behavior: 'smooth', block: 'start' }});
-    }});
-  }});
   form.addEventListener('submit', function (e) {{
     e.preventDefault();
-    if (!check1()) {{ go(1); check1(); return; }}
+    if (!check()) return;
     if (!$('crAgree').checked) {{ $('crNote').textContent = '개인정보 수집·이용에 동의하셔야 지원서를 보낼 수 있습니다.'; $('crAgree').focus(); return; }}
     var exp = Array.prototype.map.call(form.querySelectorAll('input[name=crExp]:checked'), function (x) {{ return x.value; }}).join(', ') || '선택 안 함';
     var fd = new FormData();
     fd.append('name', $('crName').value.trim());
     fd.append('phone', $('crPhone').value.trim());
-    fd.append('age', val('crAge'));
+    var bd = $('crBirth').value.replace(/\\D/g, ''); bd = bd.slice(0, 4) + '-' + bd.slice(4, 6) + '-' + bd.slice(6, 8);
+    fd.append('birth', bd);
     fd.append('region', $('crRegion').value.trim());
     fd.append('experience', exp);
-    fd.append('years', val('crYears'));
     fd.append('message', $('crMsg').value.trim());
     fd.append('consent', '개인정보 수집·이용 동의함 (' + new Date().toLocaleString('ko-KR') + ')');
-    fd.append('_subject', '[입사 지원] ' + $('crName').value.trim() + ' / ' + val('crAge') + ' / ' + $('crPhone').value.trim());
+    fd.append('_subject', '[입사 지원] ' + $('crName').value.trim() + ' / ' + bd + ' / ' + $('crPhone').value.trim());
     fd.append('_source', '채용 페이지');
     var btn = form.querySelector('button[type=submit]');
     btn.disabled = true; $('crNote').textContent = '보내는 중입니다...';
