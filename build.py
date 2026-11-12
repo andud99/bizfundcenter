@@ -814,6 +814,71 @@ def build_careers():
   </div>
 </section>
 
+<section class="cr-sec">
+  <div class="wrap cr-in">
+    <p class="lim-eyebrow2">INCOME</p>
+    <h2>컨설턴트 소득 수준</h2>
+    <p class="cr-lead">기업자금센터 컨설턴트의 평균 월 소득은 900만 원부터 시작합니다. 성과에 따라 그 이상도 가능합니다.</p>
+    <div class="cr-bars" role="img" aria-label="월 소득: 평균 900만 원, 상위 20% 1,300만 원, 상위 10% 1,700만 원, 상위 5% 2,500만 원">
+      <div class="cr-bar" style="--h:36%"><b>900<small>만 원</small></b><span>평균</span></div>
+      <div class="cr-bar" style="--h:52%"><b>1,300<small>만 원</small></b><span>상위 20%</span></div>
+      <div class="cr-bar" style="--h:68%"><b>1,700<small>만 원</small></b><span>상위 10%</span></div>
+      <div class="cr-bar top" style="--h:100%"><b>2,500<small>만 원</small></b><span>상위 5%</span></div>
+    </div>
+    <p class="cr-note">월 소득은 기업자금센터 내부 집계 기준이며, 개인 성과에 따라 달라집니다.</p>
+  </div>
+</section>
+
+<section class="cr-sec alt">
+  <div class="wrap cr-in">
+    <p class="lim-eyebrow2">TRAINING</p>
+    <h2>컨설턴트 육성 과정</h2>
+    <p class="cr-lead">처음이어도 괜찮습니다. 단계별 교육으로 기업 금융 전문가로 성장합니다.</p>
+    <ol class="cr-steps">
+      <li><p class="cr-st">입문 과정</p><ul><li>기업대출 기초</li><li>운전자금 기초</li><li>시설자금 기초</li><li>정책자금 기초</li><li>재무제표 기초</li></ul></li>
+      <li><p class="cr-st">육성 과정 Ⅰ·Ⅱ</p><ul><li>공장 담보대출</li><li>기계설비자금</li><li>보증기금대출</li><li>기술금융</li></ul></li>
+      <li><p class="cr-st">중급 과정 Ⅰ</p><ul><li>대환대출 중급</li><li>재무제표 중급</li><li>보증서 중급</li><li>시설자금 중급</li></ul></li>
+      <li><p class="cr-st">중급 과정 Ⅱ</p><ul><li>재무제표 상급</li><li>경영컨설팅 중급</li><li>기업인증 중급</li><li>기업등급 진단 중급</li></ul></li>
+    </ol>
+  </div>
+</section>
+
+<section class="cr-sec">
+  <div class="wrap cr-in">
+    <p class="lim-eyebrow2">SUPPORT</p>
+    <h2>영업 지원 프로그램</h2>
+    <ul class="cr-cards c3">
+      <li><b>중소기업 DB 제공</b><span>전국 중소기업 100만여 개 DB를 열람할 수 있는 시스템을 제공합니다.</span></li>
+      <li><b>금융권 업무 제휴</b><span>1금융권을 비롯한 금융기관 300여 개 RM 점포와 업무 제휴를 맺고 있습니다.</span></li>
+      <li><b>분야별 전문가 협업</b><span>변호사, 법무사, 노무사, 변리사, 세무사, 회계사, 감정평가사와 함께 일합니다.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="cr-sec alt">
+  <div class="wrap cr-in">
+    <p class="lim-eyebrow2">VISION</p>
+    <h2>기업 금융 컨설턴트의 비전</h2>
+    <ul class="cr-cards c4">
+      <li><b>평생 직업</b><span>정년 없이, 나이와 상관없이 열정과 실력만큼 대우받으며 일할 수 있습니다.</span></li>
+      <li><b>금융 전문가</b><span>중소기업을 분석해 정책자금, 운전자금, 시설자금, 공장 매입자금까지 설계합니다.</span></li>
+      <li><b>고소득</b><span>평균 월 900만 원부터, 상위 5%는 월 2,500만 원 수준입니다.</span></li>
+      <li><b>전문 직종</b><span>재무 분석, 인증, 경영 자문으로 기업의 사각지대를 채우는 전문가로 인정받습니다.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="cr-sec">
+  <div class="wrap cr-in">
+    <p class="lim-eyebrow2">REQUIREMENTS</p>
+    <h2>지원 자격</h2>
+    <div class="cr-req">
+      <div class="cr-box"><p class="cr-bt">기본 조건</p><ul><li>학력: 고등학교 졸업 이상</li><li>신용 상태에 이상이 없는 분 (신용불량자 지원 불가)</li></ul></div>
+      <div class="cr-box pref"><p class="cr-bt">우대 조건</p><ul><li>개인 신용대출 상담 경력</li><li>부동산 담보대출 경력</li><li>보험 설계사 경력</li><li>카드·자동차 등 영업 경력</li><li>부동산 관련 경력</li><li>자동차 소유</li></ul></div>
+    </div>
+  </div>
+</section>
+
 <section class="lim-band">
   <div class="wrap">
     <h2>성장을 함께할<br>인재를 찾습니다</h2>
