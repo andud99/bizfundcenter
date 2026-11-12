@@ -924,10 +924,10 @@ def build_careers():
 </script>
 """
     html = page(f"입사 지원 | {SITE['title']}", "기업자금센터에서 중소기업 대표님과 함께 자금·세금·구조 전략을 설계할 인재를 찾습니다. 체계적인 교육과 성과에 맞는 보상.", FULL + "/careers/", content)
-    html = html.replace(f'<a class="brand" href="{BASE}/">기업자금센터 <span>자금정보</span></a>', f'<a class="brand" href="{BASE}/careers/">기업자금센터 <span>인재 채용</span></a>', 1)
+    html = html.replace(f'<a class="brand" href="{BASE}/">기업자금센터 <span>자금정보</span></a>', f'<div class="mh-brand"><a class="brand" href="{BASE}/careers/">기업자금센터 <span>인재 채용</span></a><a class="mh-home" href="{SITE["homepage"]}">홈페이지</a></div>', 1)
     nav_old = html[html.index('<nav class="nav">'):html.index('</nav>') + 6]
     nav_new = (f'<nav class="nav">\n      <a href="#income">소득 수준</a>\n      <a href="#training">육성 과정</a>\n'
-               f'      <a href="#req">지원 자격</a>\n      <a class="nav-cta" href="#applyCard">지원하기</a>\n    </nav>')
+               f'      <a href="#req">지원 자격</a>\n      <a class="nav-home" href="{SITE["homepage"]}">홈페이지</a>\n      <a class="nav-cta" href="#applyCard">지원하기</a>\n    </nav>')
     html = html.replace(nav_old, nav_new, 1)
     write("careers/index.html", html)
 

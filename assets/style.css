@@ -386,3 +386,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .cr-bar span { font-size: 13px; }
   .cr-steps, .cr-cards.c4 { grid-template-columns: 1fr; }
 }
+
+.mh-brand { display: flex; align-items: center; gap: 14px; }
+.mh-home { display: none; font-size: 14px; text-decoration: none; padding: 5px 12px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; }
+@media (max-width: 560px) {
+  .mh-brand { width: 100%; justify-content: space-between; }
+  .mh-home { display: inline-block; }
+  .nav .nav-home { display: none; }
+}
