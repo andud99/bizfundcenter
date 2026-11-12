@@ -814,7 +814,7 @@ def build_careers():
   </div>
 </section>
 
-<section class="cr-sec">
+<section class="cr-sec" id="income">
   <div class="wrap cr-in">
     <p class="lim-eyebrow2">INCOME</p>
     <h2>컨설턴트 소득 수준</h2>
@@ -829,7 +829,7 @@ def build_careers():
   </div>
 </section>
 
-<section class="cr-sec alt">
+<section class="cr-sec alt" id="training">
   <div class="wrap cr-in">
     <p class="lim-eyebrow2">TRAINING</p>
     <h2>컨설턴트 육성 과정</h2>
@@ -868,7 +868,7 @@ def build_careers():
   </div>
 </section>
 
-<section class="cr-sec">
+<section class="cr-sec" id="req">
   <div class="wrap cr-in">
     <p class="lim-eyebrow2">REQUIREMENTS</p>
     <h2>지원 자격</h2>
@@ -923,7 +923,13 @@ def build_careers():
 }})();
 </script>
 """
-    write("careers/index.html", page(f"입사 지원 | {SITE['title']}", "기업자금센터에서 중소기업 대표님과 함께 자금·세금·구조 전략을 설계할 인재를 찾습니다. 체계적인 교육과 성과에 맞는 보상.", FULL + "/careers/", content))
+    html = page(f"입사 지원 | {SITE['title']}", "기업자금센터에서 중소기업 대표님과 함께 자금·세금·구조 전략을 설계할 인재를 찾습니다. 체계적인 교육과 성과에 맞는 보상.", FULL + "/careers/", content)
+    html = html.replace(f'<a class="brand" href="{BASE}/">기업자금센터 <span>자금정보</span></a>', f'<a class="brand" href="{BASE}/careers/">기업자금센터 <span>인재 채용</span></a>', 1)
+    nav_old = html[html.index('<nav class="nav">'):html.index('</nav>') + 6]
+    nav_new = (f'<nav class="nav">\n      <a href="#income">소득 수준</a>\n      <a href="#training">육성 과정</a>\n'
+               f'      <a href="#req">지원 자격</a>\n      <a class="nav-cta" href="#applyCard">지원하기</a>\n    </nav>')
+    html = html.replace(nav_old, nav_new, 1)
+    write("careers/index.html", html)
 
 
 def build_widget(posts):
