@@ -223,6 +223,19 @@ def build_post(p, posts):
     write(f"p/{p['slug']}/index.html", page(f"{p['title']} | {SITE['title']}", p["description"], FULL + f"/p/{p['slug']}/", content, "article"))
 
 
+def send_js():
+    """Shared client-side sender: Google Apps Script when gas_url is set, Formspree otherwise."""
+    gas = SITE.get("gas_url", "")
+    return ("var GAS_URL = " + json.dumps(gas) + ";\n"
+            "  function sendForm(fd, type) {\n"
+            "    if (!GAS_URL) return fetch(FORM_URL, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });\n"
+            "    var pairs = [], subj = '';\n"
+            "    fd.forEach(function (v, k) { if (k === '_subject') subj = v; else if (k.charAt(0) !== '_') pairs.push([k, String(v)]); });\n"
+            "    var body = new URLSearchParams({ type: type, subject: subj, payload: JSON.stringify(pairs) });\n"
+            "    return fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: body }).then(function () { return { ok: true }; });\n"
+            "  }\n")
+
+
 def build_apply():
     content = f"""<section class="wrap apply">
   <h1>무료 상담 신청</h1>
@@ -255,13 +268,15 @@ def build_apply():
 </section>
 <script>
 (function () {{
-  var form = document.getElementById('fundForm');
+  var FORM_URL = '{esc(SITE['formspree'])}';
+  {send_js()}  var form = document.getElementById('fundForm');
   var note = document.getElementById('formNote');
   form.addEventListener('submit', function (e) {{
     e.preventDefault();
     var btn = form.querySelector('button');
     btn.disabled = true; note.textContent = '보내는 중입니다...';
-    fetch(form.action, {{ method: 'POST', body: new FormData(form), headers: {{ 'Accept': 'application/json' }} }})
+    var fd = new FormData(form); fd.append('_subject', '[상담 신청] ' + (fd.get('company') || fd.get('name') || ''));
+    sendForm(fd, '상담신청')
       .then(function (r) {{
         if (!r.ok) throw new Error();
         form.hidden = true; document.getElementById('thanks').hidden = false;
@@ -498,7 +513,7 @@ def build_limit():
   }};
 
   var FORM_URL = '{esc(SITE['formspree'])}';
-  var last = null;
+  {send_js()}  var last = null;
   function $(id) {{ return document.getElementById(id); }}
   function num(id) {{ var v = parseFloat($(id).value); return v > 0 ? v : 0; }}
   function eok(v) {{
@@ -644,7 +659,7 @@ def build_limit():
     fd.append('_subject', '[예상 한도] ' + $('cCompany').value.trim() + ' / ' + $('range').textContent);
     var btn = calc.querySelector('button[type=submit]');
     btn.disabled = true;
-    fetch(FORM_URL, {{ method: 'POST', body: fd, headers: {{ 'Accept': 'application/json' }} }})
+    sendForm(fd, '한도계산')
       .then(function (r) {{ if (!r.ok) throw new Error(); }})
       .catch(function () {{}})
       .then(function () {{ btn.disabled = false; }});
@@ -661,7 +676,7 @@ def build_limit():
     last.info.forEach(function (x) {{ fd.append(x[0], x[1]); }});
     fd.append('개인정보 동의', last.consent);
     fd.append('_subject', '[상담 신청] ' + last.company + ' / ' + last.phone);
-    fetch(FORM_URL, {{ method: 'POST', body: fd, headers: {{ 'Accept': 'application/json' }} }})
+    sendForm(fd, '상담신청')
       .then(function (r) {{ if (!r.ok) throw new Error(); $('askBox').hidden = true; $('thanks').hidden = false; }})
       .catch(function () {{ btn.disabled = false; $('askNote').textContent = '신청이 전송되지 않았습니다. 잠시 후 다시 눌러 주세요.'; }});
   }});
@@ -889,6 +904,7 @@ def build_careers():
 <script>
 (function () {{
   var FORM_URL = '{esc(SITE['formspree'])}';
+  {send_js()}
   function $(id) {{ return document.getElementById(id); }}
   function val(n) {{ var r = document.querySelector('input[name="' + n + '"]:checked'); return r ? r.value : ''; }}
   var form = $('crForm');
@@ -915,7 +931,7 @@ def build_careers():
     fd.append('_subject', '[입사 지원] ' + $('crName').value.trim() + ' / ' + bd + ' / ' + $('crPhone').value.trim());
     var btn = form.querySelector('button[type=submit]');
     btn.disabled = true; $('crNote').textContent = '보내는 중입니다...';
-    fetch(FORM_URL, {{ method: 'POST', body: fd, headers: {{ 'Accept': 'application/json' }} }})
+    sendForm(fd, '입사지원')
       .then(function (r) {{ if (!r.ok) throw new Error(); form.hidden = true; $('crThanks').hidden = false; }})
       .catch(function () {{ btn.disabled = false; $('crNote').textContent = '전송되지 않았습니다. 잠시 후 다시 눌러 주세요.'; }});
   }});

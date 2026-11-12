@@ -248,6 +248,14 @@
   };
 
   var FORM_URL = 'https://formspree.io/f/xovkbbkg';
+  var GAS_URL = "";
+  function sendForm(fd, type) {
+    if (!GAS_URL) return fetch(FORM_URL, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
+    var pairs = [], subj = '';
+    fd.forEach(function (v, k) { if (k === '_subject') subj = v; else if (k.charAt(0) !== '_') pairs.push([k, String(v)]); });
+    var body = new URLSearchParams({ type: type, subject: subj, payload: JSON.stringify(pairs) });
+    return fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: body }).then(function () { return { ok: true }; });
+  }
   var last = null;
   function $(id) { return document.getElementById(id); }
   function num(id) { var v = parseFloat($(id).value); return v > 0 ? v : 0; }
@@ -394,7 +402,7 @@
     fd.append('_subject', '[예상 한도] ' + $('cCompany').value.trim() + ' / ' + $('range').textContent);
     var btn = calc.querySelector('button[type=submit]');
     btn.disabled = true;
-    fetch(FORM_URL, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } })
+    sendForm(fd, '한도계산')
       .then(function (r) { if (!r.ok) throw new Error(); })
       .catch(function () {})
       .then(function () { btn.disabled = false; });
@@ -411,7 +419,7 @@
     last.info.forEach(function (x) { fd.append(x[0], x[1]); });
     fd.append('개인정보 동의', last.consent);
     fd.append('_subject', '[상담 신청] ' + last.company + ' / ' + last.phone);
-    fetch(FORM_URL, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } })
+    sendForm(fd, '상담신청')
       .then(function (r) { if (!r.ok) throw new Error(); $('askBox').hidden = true; $('thanks').hidden = false; })
       .catch(function () { btn.disabled = false; $('askNote').textContent = '신청이 전송되지 않았습니다. 잠시 후 다시 눌러 주세요.'; });
   });
