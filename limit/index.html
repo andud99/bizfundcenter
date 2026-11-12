@@ -370,27 +370,28 @@
     ul.hidden = notes.length === 0;
 
     var r1 = function (v) { return Math.round(v * 10) / 10; };
-    var summary = [
-      '업종 ' + txt('ind'), '업력 ' + txt('age'), '매출 ' + rev + '억', '직원 ' + emp + '명',
-      loss ? '적자' : '흑자', '수출 ' + exp + '만불', '대표신용 ' + txt('score'), '기업등급 ' + txt('grade'),
-      '기존A ' + useA + '억', '기존B ' + useB + '억', '기존C ' + useCamt + '억', 'C이력 ' + txt('useC'), '기존D ' + useD + '억', '소재지 ' + txt('region'),
-      '인증 ' + certs + '개', $('lead').checked ? '유망·선도' : '', $('ipsales').checked ? '매출 특허' : '', $('agri').checked ? '농수산 원료' : '', $('land').checked ? '부동산 있음' : '',
-      $('tax').checked ? '체납 있음' : '',
-      '계산: ' + parts.filter(function (p) { return p[2] > 0; }).map(function (p) { return p[0] + ' ' + r1(p[1]) + '~' + r1(p[2]); }).join(', ') + (fWay ? ' (' + fWay + ')' : ''),
-      '합계 ' + $('range').textContent
-    ].filter(Boolean).join(' / ');
+    var extras = [$('lead').checked ? '유망·선도 업종' : '', $('ipsales').checked ? '매출 비중 큰 특허' : '', $('agri').checked ? '농수산물 원료 제조' : '', $('land').checked ? '부동산 보유' : '', $('tax').checked ? '세금 체납 있음' : ''].filter(Boolean);
+    var calcLines = parts.filter(function (p) { return p[2] > 0; }).map(function (p) { return p[0] + ' ' + r1(p[1]) + '~' + r1(p[2]) + '억'; }).join(' / ') + (fWay ? ' (' + fWay + ')' : '');
+    var info = [
+      ['회사명', $('cCompany').value.trim()],
+      ['대표자', $('cName').value.trim()],
+      ['연락처', $('cPhone').value.trim()],
+      ['예상 한도', $('range').textContent],
+      ['사업자번호', bizDigits.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3')],
+      ['회사 개요', txt('ind') + ' · 업력 ' + txt('age') + ' · ' + txt('region') + ' · 직원 ' + emp + '명'],
+      ['매출·결산', '매출 ' + rev + '억 · ' + (loss ? '적자' : '흑자') + (exp > 0 ? ' · 수출 ' + exp + '만 달러' : '')],
+      ['신용', '대표 ' + txt('score') + ' · 회사 등급 ' + txt('grade')],
+      ['기존 자금', 'A ' + useA + '억 · B ' + useB + '억 · C ' + useCamt + '억 (' + txt('useC') + ') · D ' + useD + '억'],
+      ['인증·특이사항', '인증 ' + certs + '개' + (extras.length ? ' · ' + extras.join(' · ') : '')],
+      ['기관별 계산', calcLines || '없음']
+    ];
 
     $('result').hidden = false; $('detail').hidden = false;
     var fd = new FormData();
-    fd.append('name', $('cName').value.trim());
-    fd.append('company', $('cCompany').value.trim());
-    fd.append('phone', $('cPhone').value.trim());
-    fd.append('bizno', bizDigits.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3'));
-    fd.append('calc', summary);
-    last = { fd: fd, company: $('cCompany').value.trim(), phone: $('cPhone').value.trim() };
-    fd.append('consent', '개인정보 수집·이용 동의함 (' + new Date().toLocaleString('ko-KR') + ')');
+    info.forEach(function (x) { fd.append(x[0], x[1]); });
+    fd.append('개인정보 동의', '동의함 (' + new Date().toLocaleString('ko-KR') + ')');
+    last = { info: info, consent: fd.get('개인정보 동의'), company: $('cCompany').value.trim(), phone: $('cPhone').value.trim() };
     fd.append('_subject', '[예상 한도] ' + $('cCompany').value.trim() + ' / ' + $('range').textContent);
-    fd.append('_source', '예상 한도 계산');
     var btn = calc.querySelector('button[type=submit]');
     btn.disabled = true;
     fetch(FORM_URL, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } })
@@ -405,11 +406,11 @@
     var btn = $('askBtn');
     btn.disabled = true; $('askNote').textContent = '보내는 중입니다...';
     var fd = new FormData();
-    last.fd.forEach(function (v, k) { if (k !== '_subject' && k !== '_source') fd.append(k, v); });
-    fd.append('time', $('askTime').value);
-    fd.append('message', $('askMsg').value.trim());
+    fd.append('연락 희망 시간', $('askTime').value);
+    fd.append('궁금한 점', $('askMsg').value.trim() || '(없음)');
+    last.info.forEach(function (x) { fd.append(x[0], x[1]); });
+    fd.append('개인정보 동의', last.consent);
     fd.append('_subject', '[상담 신청] ' + last.company + ' / ' + last.phone);
-    fd.append('_source', '예상 한도 계산 → 상담 신청');
     fetch(FORM_URL, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } })
       .then(function (r) { if (!r.ok) throw new Error(); $('askBox').hidden = true; $('thanks').hidden = false; })
       .catch(function () { btn.disabled = false; $('askNote').textContent = '신청이 전송되지 않았습니다. 잠시 후 다시 눌러 주세요.'; });

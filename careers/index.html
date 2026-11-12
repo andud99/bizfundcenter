@@ -204,16 +204,15 @@
     if (!$('crAgree').checked) { $('crNote').textContent = '개인정보 수집·이용에 동의하셔야 지원서를 보낼 수 있습니다.'; $('crAgree').focus(); return; }
     var exp = Array.prototype.map.call(form.querySelectorAll('input[name=crExp]:checked'), function (x) { return x.value; }).join(', ') || '선택 안 함';
     var fd = new FormData();
-    fd.append('name', $('crName').value.trim());
-    fd.append('phone', $('crPhone').value.trim());
+    fd.append('성함', $('crName').value.trim());
+    fd.append('연락처', $('crPhone').value.trim());
     var bd = $('crBirth').value.replace(/\D/g, ''); bd = bd.slice(0, 4) + '-' + bd.slice(4, 6) + '-' + bd.slice(6, 8);
-    fd.append('birth', bd);
-    fd.append('region', $('crRegion').value.trim());
-    fd.append('experience', exp);
-    fd.append('message', $('crMsg').value.trim());
-    fd.append('consent', '개인정보 수집·이용 동의함 (' + new Date().toLocaleString('ko-KR') + ')');
+    fd.append('생년월일', bd);
+    fd.append('거주 지역', $('crRegion').value.trim());
+    fd.append('관련 경력', exp);
+    fd.append('지원 동기', $('crMsg').value.trim() || '(없음)');
+    fd.append('개인정보 동의', '동의함 (' + new Date().toLocaleString('ko-KR') + ')');
     fd.append('_subject', '[입사 지원] ' + $('crName').value.trim() + ' / ' + bd + ' / ' + $('crPhone').value.trim());
-    fd.append('_source', '채용 페이지');
     var btn = form.querySelector('button[type=submit]');
     btn.disabled = true; $('crNote').textContent = '보내는 중입니다...';
     fetch(FORM_URL, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } })
