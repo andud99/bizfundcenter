@@ -248,7 +248,7 @@
   };
 
   var FORM_URL = 'https://formspree.io/f/xovkbbkg';
-  var GAS_URL = "";
+  var GAS_URL = "https://script.google.com/macros/s/AKfycbwYFzeX8odlrVgA9krs1p2Ke25Qn_2YsoEUCERWiMATqzFkBuNNLxcCgISFYvDv1VL1tg/exec";
   function sendForm(fd, type) {
     if (!GAS_URL) return fetch(FORM_URL, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
     var pairs = [], subj = '';
