@@ -394,3 +394,5 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .mh-home { display: inline-block; }
   .nav .nav-home { display: none; }
 }
+.q-more { margin: 16px 0 0; font-size: 15px; }
+@media (max-width: 560px) { .lim-chips.c3 span { font-size: 13px; padding: 6px 4px; } }
