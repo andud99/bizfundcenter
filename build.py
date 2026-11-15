@@ -299,7 +299,14 @@ def build_limit():
     n_cases = len(_d)
     sum_eok = int(sum(_eok(f[1]) for x in _d for f in x["fund"]))
     years = datetime.now(KST).year - 2013
-    content = f"""<section class="lim-hero">
+    content = f"""<script>
+(function () {{
+  /* 메타 광고로 들어온 사람은 30초 버전으로 보냅니다 (광고 URL을 바꾸지 않아도 됨) */
+  var q = location.search;
+  if (/[?&]utm_source=meta/.test(q) && !/[?&]full=1/.test(q)) location.replace('{BASE}/check/' + q);
+}})();
+</script>
+<section class="lim-hero">
   <div class="lim-hero-in">
     <div class="lim-copy">
       <p class="lim-badge">무료 한도 점검</p>
