@@ -538,6 +538,18 @@ def build_limit():
   }}
 
   var calc = $('calcForm');
+  (function prefill() {{
+    var d = null;
+    try {{ d = JSON.parse(sessionStorage.getItem('bfCheck') || 'null'); }} catch (err) {{}}
+    if (!d) return;
+    if (d.name) $('cName').value = d.name;
+    if (d.phone) $('cPhone').value = d.phone;
+    if (d.biz) $('cBiz').value = d.biz;
+    function pick(n, v) {{ var r = document.querySelector('input[name="' + n + '"][value="' + v + '"]'); if (r) r.checked = true; }}
+    if (d.ind === 'mfg' || d.ind === 'whole') pick('ind', d.ind);
+    if (d.age) pick('age', d.age);
+    if (d.region) pick('region', d.region);
+  }})();
   function go(n) {{
     calc.querySelectorAll('.lim-page').forEach(function (pg) {{ pg.hidden = pg.dataset.page !== String(n); }});
     document.querySelectorAll('.lim-prog li').forEach(function (li, i) {{ li.classList.toggle('on', i < n); }});
@@ -925,6 +937,7 @@ def build_check():
     ];
     var consent = '동의함 (' + new Date().toLocaleString('ko-KR') + ')';
     last = {{ info: info, consent: consent }};
+    try {{ sessionStorage.setItem('bfCheck', JSON.stringify({{ name: $('cName').value.trim(), phone: $('cPhone').value.trim(), biz: $('cBiz').value.trim(), ind: val('ind'), age: val('age'), region: val('region') }})); }} catch (err) {{}}
     var fd = new FormData();
     info.forEach(function (x) {{ fd.append(x[0], x[1]); }});
     fd.append('개인정보 동의', consent);

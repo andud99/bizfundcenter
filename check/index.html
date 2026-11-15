@@ -209,6 +209,7 @@
     ];
     var consent = '동의함 (' + new Date().toLocaleString('ko-KR') + ')';
     last = { info: info, consent: consent };
+    try { sessionStorage.setItem('bfCheck', JSON.stringify({ name: $('cName').value.trim(), phone: $('cPhone').value.trim(), biz: $('cBiz').value.trim(), ind: val('ind'), age: val('age'), region: val('region') })); } catch (err) {}
     var fd = new FormData();
     info.forEach(function (x) { fd.append(x[0], x[1]); });
     fd.append('개인정보 동의', consent);
