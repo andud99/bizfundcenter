@@ -314,7 +314,7 @@ def build_limit():
       <p class="lim-sub">매출과 업종, 지금 쓰고 있는 자금만 넣으면 <br>받을 수 있는 운전자금의 <b>예상 범위</b>를 바로 보여드립니다. <br>결산이 바뀌기 전에 미리 확인해 두세요.</p>
       <ul class="lim-stats">
         <li><span>상반기 진행 사례</span><b>120<small>건</small></b></li>
-        <li><span>상반기 자금 합계</span><b>370<small>억 원</small></b></li>
+        <li><span>상반기 자금 합계</span><b>1,170<small>억 원</small></b></li>
         <li><span>기업자금 현장</span><b class="lim-since">SINCE 2013</b></li>
       </ul>
       <p class="lim-statnote">2026년 상반기 기업자금센터 진행 기준</p>
@@ -778,7 +778,7 @@ def build_check():
       <p class="lim-sub">매출과 직원 수를 움직여 보세요. <br>받을 수 있는 운전자금의 예상 범위가 바로 바뀝니다.</p>
       <ul class="lim-stats">
         <li><span>상반기 진행 사례</span><b>120<small>건</small></b></li>
-        <li><span>상반기 자금 합계</span><b>370<small>억 원</small></b></li>
+        <li><span>상반기 자금 합계</span><b>1,170<small>억 원</small></b></li>
         <li><span>기업자금 현장</span><b class="lim-since">SINCE 2013</b></li>
       </ul>
       <p class="lim-statnote">2026년 상반기 기업자금센터 진행 기준</p>
@@ -799,8 +799,12 @@ def build_check():
         </div>
         <div class="q-slide">
           <div class="q-slide-top"><label for="revR" class="lim-q">최근 1년 매출</label><output id="revOut" for="revR">15억 원</output></div>
-          <input type="range" id="revR" min="0" max="16" step="1" value="7">
-          <div class="q-ticks" aria-hidden="true"><span style="left:0%">1억</span><span style="left:31.25%">10억</span><span style="left:75%">50억</span><span style="left:100%">300억</span></div>
+          <div class="q-range-row">
+            <button type="button" class="q-step" id="revMinus" aria-label="매출 1억 줄이기">−</button>
+            <input type="range" id="revR" min="1" max="300" step="1" value="15">
+            <button type="button" class="q-step" id="revPlus" aria-label="매출 1억 늘리기">+</button>
+          </div>
+          <div class="q-ticks" aria-hidden="true"><span style="left:0%">1억</span><span style="left:33.1%">100억</span><span style="left:66.6%">200억</span><span style="left:100%">300억</span></div>
         </div>
         <div class="q-slide">
           <div class="q-slide-top"><label for="empR" class="lim-q">상시 직원 수 <small>(대표 제외)</small></label><output id="empOut" for="empR">5명</output></div>
@@ -869,9 +873,8 @@ def build_check():
     s += Math.floor(Number(d[8]) * 5 / 10);
     return (10 - (s % 10)) % 10 === Number(d[9]);
   }}
-  var REVS = [1, 2, 3, 5, 7, 10, 12, 15, 20, 25, 30, 40, 50, 70, 100, 150, 300];
   var EMPS = [1, 2, 3, 4, 5, 7, 10, 15, 20, 30, 50, 100];
-  function rev() {{ return REVS[Number($('revR').value)]; }}
+  function rev() {{ return Number($('revR').value); }}
   function emp() {{ return EMPS[Number($('empR').value)]; }}
   /* 보통 기준값(신용 740~839점, 기존 자금 없음)으로 계산하는 간단 산식 */
   var RATE = {{ mfg: 1/4, whole: 1/6, svc: 1/6 }}, CAP = {{ 1: 3, 2: 10, 3: 15 }}, SC = 0.85;
@@ -898,6 +901,9 @@ def build_check():
     $('doors').textContent = '두드릴 수 있는 문 ' + r.doors + '곳 · 기존 자금·신용에 따라 달라집니다';
   }}
   ['revR', 'empR'].forEach(function (id) {{ $(id).addEventListener('input', update); }});
+  function nudge(d) {{ var r = $('revR'); r.value = Math.min(300, Math.max(1, Number(r.value) + d)); update(); }}
+  $('revMinus').addEventListener('click', function () {{ nudge(-1); }});
+  $('revPlus').addEventListener('click', function () {{ nudge(1); }});
   document.querySelectorAll('#qStep1 input[type=radio]').forEach(function (x) {{ x.addEventListener('change', update); }});
   update();
 
@@ -956,7 +962,7 @@ def build_careers():
       <p class="lim-sub">기업자금센터는 중소기업 대표님과 마주 앉아 <br>자금·세금·구조 전략을 함께 설계하는 팀입니다. <br>체계적인 교육과 보상 속에서 함께 성장할 분을 찾습니다.</p>
       <ul class="lim-stats">
         <li><span>평균 월 소득<br><small>(세후)</small></span><b>900<small>만 원~</small></b></li>
-        <li><span>상반기 자금 진행</span><b>370<small>억 원</small></b></li>
+        <li><span>상반기 자금 진행</span><b>1,170<small>억 원</small></b></li>
         <li><span>기업자금 현장</span><b class="lim-since">SINCE 2013</b></li>
       </ul>
       <p class="lim-statnote">평균 소득·진행 금액은 기업자금센터 내부 집계 기준이며, 개인 성과에 따라 달라집니다.</p>
