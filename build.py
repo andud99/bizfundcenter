@@ -350,7 +350,7 @@ def build_limit():
             </div>
           </div>
           <div class="lim-row2">
-            <label class="lim-in"><span>최근 1년 매출 <small>(억 원)</small></span><input id="rev" type="number" min="0" step="0.1" inputmode="decimal" placeholder="예: 25"></label>
+            <label class="lim-in"><span>최근 1년 매출 <small>(억 원)</small></span><input id="rev" type="number" min="0" step="1" inputmode="decimal" placeholder="예: 25"></label>
             <label class="lim-in"><span>상시 직원 수 <small>(명)</small></span><input id="emp" type="number" min="0" step="1" inputmode="numeric" placeholder="대표 제외"></label>
           </div>
           <div class="lim-field"><p class="lim-q">최근 결산</p>
