@@ -396,3 +396,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 .q-more { margin: 16px 0 0; font-size: 15px; }
 @media (max-width: 560px) { .lim-chips.c3 span { font-size: 13px; padding: 6px 4px; } }
+
+/* 30초 계산: 슬라이더와 즉시 결과 */
+.q-slide { display: grid; gap: 6px; }
+.q-slide-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.q-slide-top .lim-q { margin: 0; }
+.q-slide output { font-size: 20px; font-weight: 800; color: #9a4f00; font-variant-numeric: tabular-nums; }
+.q-slide input[type=range] { width: 100%; height: 36px; accent-color: var(--pink); cursor: pointer; }
+.q-ticks { position: relative; height: 16px; margin: -6px 10px 0; font-size: 12px; color: var(--muted); }
+.q-ticks span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.q-ticks span:first-child { transform: none; margin-left: -10px; }
+.q-ticks span:last-child { transform: translateX(-100%); margin-left: 10px; }
+.lim-card-head + .lim-page { margin-top: 14px; }
+.q-live { background: var(--navy); color: var(--white); border-radius: 14px; padding: 16px 18px; text-align: center; }
+.q-live-k { margin: 0; font-size: 13px; color: #c9ccd4; }
+.q-live-v { margin: 4px 0 0; font-size: clamp(26px, 6.4vw, 34px); font-weight: 800; color: var(--pink); font-variant-numeric: tabular-nums; }
+.q-live-d { margin: 4px 0 0; font-size: 12px; color: #c9ccd4; }
+.q-hint { margin: 0; font-size: 13px; color: var(--muted); text-align: center; line-height: 1.5; }

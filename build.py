@@ -549,6 +549,9 @@ def build_limit():
     if (d.ind === 'mfg' || d.ind === 'whole') pick('ind', d.ind);
     if (d.age) pick('age', d.age);
     if (d.region) pick('region', d.region);
+    if (d.rev) $('rev').value = d.rev;
+    if (d.emp) $('emp').value = d.emp;
+    if (d.agree) $('cAgree').checked = true;
   }})();
   function go(n) {{
     calc.querySelectorAll('.lim-page').forEach(function (pg) {{ pg.hidden = pg.dataset.page !== String(n); }});
@@ -772,7 +775,7 @@ def build_check():
     <div class="lim-copy">
       <p class="lim-badge">30초 한도 점검</p>
       <h1>우리 회사 운전자금,<br><em>얼마까지</em> 될까요?</h1>
-      <p class="lim-sub">업종과 매출만 눌러 주세요. <br>받을 수 있는 운전자금의 예상 범위를 바로 보여드립니다.</p>
+      <p class="lim-sub">매출과 직원 수를 움직여 보세요. <br>받을 수 있는 운전자금의 예상 범위가 바로 바뀝니다.</p>
       <ul class="lim-stats">
         <li><span>상반기 진행 사례</span><b>120<small>건</small></b></li>
         <li><span>상반기 자금 합계</span><b>370<small>억 원</small></b></li>
@@ -783,97 +786,72 @@ def build_check():
 
     <div class="lim-card" id="calcCard">
       <div class="lim-card-head">
-        <p class="lim-chip-dark">30초 예상 한도</p>
-        <ol class="lim-prog" aria-label="진행 단계"><li class="on">회사</li><li>결과 받기</li></ol>
+        <p class="lim-chip-dark">1단계 · 예상 한도</p>
+        <ol class="lim-prog" aria-label="진행 단계"><li class="on">예상 한도</li><li>최종 한도</li></ol>
       </div>
-      <form id="qForm" novalidate>
-        <div class="lim-page" data-page="1">
-          <div class="lim-field"><p class="lim-q">업종</p>
-            <div class="lim-chips c3" role="radiogroup">
-              <label><input type="radio" name="ind" value="mfg" checked><span>제조</span></label>
-              <label><input type="radio" name="ind" value="whole"><span>도소매·유통</span></label>
-              <label><input type="radio" name="ind" value="svc"><span>IT·건설·서비스</span></label>
-            </div>
+      <div class="lim-page" id="qStep1">
+        <div class="lim-field"><p class="lim-q">업종</p>
+          <div class="lim-chips c3" role="radiogroup">
+            <label><input type="radio" name="ind" value="mfg" checked><span>제조</span></label>
+            <label><input type="radio" name="ind" value="whole"><span>도소매·유통</span></label>
+            <label><input type="radio" name="ind" value="svc"><span>IT·건설·서비스</span></label>
           </div>
-          <div class="lim-field"><p class="lim-q">최근 1년 매출</p>
-            <div class="lim-chips c3" role="radiogroup">
-              <label><input type="radio" name="rev" value="4"><span>5억 이하</span></label>
-              <label><input type="radio" name="rev" value="7.5"><span>5~10억</span></label>
-              <label><input type="radio" name="rev" value="15" checked><span>10~20억</span></label>
-              <label><input type="radio" name="rev" value="30"><span>20~40억</span></label>
-              <label><input type="radio" name="rev" value="50"><span>40~60억</span></label>
-              <label><input type="radio" name="rev" value="80"><span>60억 이상</span></label>
-            </div>
-          </div>
-          <div class="lim-field"><p class="lim-q">업력</p>
-            <div class="lim-chips c3" role="radiogroup">
-              <label><input type="radio" name="age" value="1"><span>3년 미만</span></label>
-              <label><input type="radio" name="age" value="2" checked><span>3~7년</span></label>
-              <label><input type="radio" name="age" value="3"><span>7년 이상</span></label>
-            </div>
-          </div>
-          <div class="lim-field"><p class="lim-q">소재지</p>
-            <div class="lim-chips c2" role="radiogroup">
-              <label><input type="radio" name="region" value="cap" checked><span>수도권</span></label>
-              <label><input type="radio" name="region" value="local"><span>지방</span></label>
-            </div>
-          </div>
-          <button class="lim-next" type="button" id="qNext">다음</button>
         </div>
+        <div class="q-slide">
+          <div class="q-slide-top"><label for="revR" class="lim-q">최근 1년 매출</label><output id="revOut" for="revR">15억 원</output></div>
+          <input type="range" id="revR" min="0" max="16" step="1" value="7">
+          <div class="q-ticks" aria-hidden="true"><span style="left:0%">1억</span><span style="left:31.25%">10억</span><span style="left:75%">50억</span><span style="left:100%">300억</span></div>
+        </div>
+        <div class="q-slide">
+          <div class="q-slide-top"><label for="empR" class="lim-q">상시 직원 수 <small>(대표 제외)</small></label><output id="empOut" for="empR">5명</output></div>
+          <input type="range" id="empR" min="0" max="11" step="1" value="4">
+          <div class="q-ticks" aria-hidden="true"><span style="left:0%">1명</span><span style="left:54.5%">10명</span><span style="left:81.8%">30명</span><span style="left:100%">100명+</span></div>
+        </div>
+        <div class="lim-field"><p class="lim-q">업력</p>
+          <div class="lim-chips c3" role="radiogroup">
+            <label><input type="radio" name="age" value="1"><span>3년 미만</span></label>
+            <label><input type="radio" name="age" value="2" checked><span>3~7년</span></label>
+            <label><input type="radio" name="age" value="3"><span>7년 이상</span></label>
+          </div>
+        </div>
+        <div class="lim-field"><p class="lim-q">소재지</p>
+          <div class="lim-chips c2" role="radiogroup">
+            <label><input type="radio" name="region" value="cap" checked><span>수도권</span></label>
+            <label><input type="radio" name="region" value="local"><span>지방</span></label>
+          </div>
+        </div>
+        <div class="q-live" aria-live="polite">
+          <p class="q-live-k">예상 운전자금 한도</p>
+          <p class="q-live-v" id="range">-</p>
+          <p class="q-live-d" id="doors"></p>
+        </div>
+        <button class="lim-next" type="button" id="qNext">최종 한도 자세히 보기 →</button>
+        <p class="q-hint">기존 자금·신용·인증까지 넣으면 우리 회사 최종 한도와 기관별 순서가 나옵니다.</p>
+      </div>
 
-        <div class="lim-page" data-page="2" hidden>
-          <p class="lim-q">결과 받으실 연락처</p>
-          <label class="lim-in">성함<input id="cName" type="text" autocomplete="name" placeholder="대표자 성함"></label>
-          <label class="lim-in">연락처<input id="cPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="010-0000-0000"></label>
-          <label class="lim-in">사업자등록번호<input id="cBiz" type="text" inputmode="numeric" placeholder="000-00-00000" maxlength="12"></label>
-          <div class="lim-consent">
-            <label><input type="checkbox" id="cAgree"> 개인정보 수집·이용에 동의합니다 (필수)</label>
-            <details>
-              <summary>내용 보기</summary>
-              <ul>
-                <li>수집 항목: 성함, 연락처, 사업자등록번호, 이 화면에서 고른 회사 정보</li>
-                <li>수집 목적: 예상 한도 안내 및 자금 상담 연락</li>
-                <li>보유 기간: 수집일로부터 1년. 기간이 지나거나 삭제를 요청하시면 지체 없이 파기합니다.</li>
-                <li>처리: 접수 내용은 기업자금센터 담당자에게만 전달됩니다.</li>
-                <li>동의를 거부할 수 있으며, 거부하시면 예상 한도 결과를 보실 수 없습니다.</li>
-              </ul>
-            </details>
-          </div>
-          <div class="lim-nav"><button class="lim-back" type="button" id="qBack">이전</button><button class="btn lim-submit" type="submit">예상 한도 보기</button></div>
+      <form class="lim-page" id="qStep2" novalidate hidden>
+        <p class="lim-q">최종 한도를 받아 보실 연락처</p>
+        <label class="lim-in">성함<input id="cName" type="text" autocomplete="name" placeholder="대표자 성함"></label>
+        <label class="lim-in">연락처<input id="cPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="010-0000-0000"></label>
+        <label class="lim-in">사업자등록번호<input id="cBiz" type="text" inputmode="numeric" placeholder="000-00-00000" maxlength="12"></label>
+        <div class="lim-consent">
+          <label><input type="checkbox" id="cAgree"> 개인정보 수집·이용에 동의합니다 (필수)</label>
+          <details>
+            <summary>내용 보기</summary>
+            <ul>
+              <li>수집 항목: 성함, 연락처, 사업자등록번호, 이 화면에서 고른 회사 정보</li>
+              <li>수집 목적: 예상 한도 안내 및 자금 상담 연락</li>
+              <li>보유 기간: 수집일로부터 1년. 기간이 지나거나 삭제를 요청하시면 지체 없이 파기합니다.</li>
+              <li>처리: 접수 내용은 기업자금센터 담당자에게만 전달됩니다.</li>
+              <li>동의를 거부할 수 있으며, 거부하시면 최종 한도 계산으로 넘어갈 수 없습니다.</li>
+            </ul>
+          </details>
         </div>
-        <p class="form-note" id="calcNote" role="status"></p>
+        <div class="lim-nav"><button class="lim-back" type="button" id="qBack">이전</button><button class="btn lim-submit" type="submit">2단계 최종 한도 계산</button></div>
       </form>
+      <p class="form-note" id="calcNote" role="status"></p>
       <p class="lim-foot">상담 비용 0원 · 입력하신 정보는 상담 목적으로만 사용됩니다</p>
     </div>
-  </div>
-</section>
-
-<section class="wrap lim-after">
-  <div id="result" class="lim-result" hidden>
-    <p class="lim-eyebrow">예상 운전자금 한도</p>
-    <p class="lim-range" id="range"></p>
-    <p class="lim-doors" id="doors"></p>
-    <p class="lim-disc">업종·매출·업력만으로 계산한 참고용 범위입니다. 지금 쓰고 있는 자금, 신용, 인증에 따라 범위가 크게 달라질 수 있습니다.</p>
-  </div>
-  <div id="detail" class="lim-detail" hidden>
-    <h2>더 정확한 금액이 궁금하시면</h2>
-    <p>지금 쓰고 있는 자금과 신용 상태까지 보면 어느 기관에, 어떤 순서로 들어가야 할지 정확히 나옵니다. 상담을 신청하시면 담당자가 직접 연락드립니다.</p>
-    <div class="lim-ask" id="askBox">
-      <label>편한 연락 시간
-        <select id="askTime">
-          <option>언제든 괜찮음</option>
-          <option>오전 (9~12시)</option>
-          <option>오후 (1~6시)</option>
-        </select>
-      </label>
-      <button class="btn" type="button" id="askBtn">무료 상담 신청하기</button>
-      <p class="form-note" id="askNote" role="status"></p>
-    </div>
-    <div id="thanks" class="thanks" hidden>
-      <h2>상담 신청이 접수되었습니다</h2>
-      <p>담당자가 확인 후 영업일 기준 1~2일 안에 연락드립니다.</p>
-    </div>
-    <p class="q-more"><a href="{BASE}/limit/">직접 더 자세히 계산해 보기 →</a></p>
   </div>
 </section>
 <script>
@@ -891,77 +869,78 @@ def build_check():
     s += Math.floor(Number(d[8]) * 5 / 10);
     return (10 - (s % 10)) % 10 === Number(d[9]);
   }}
+  var REVS = [1, 2, 3, 5, 7, 10, 12, 15, 20, 25, 30, 40, 50, 70, 100, 150, 300];
+  var EMPS = [1, 2, 3, 4, 5, 7, 10, 15, 20, 30, 50, 100];
+  function rev() {{ return REVS[Number($('revR').value)]; }}
+  function emp() {{ return EMPS[Number($('empR').value)]; }}
   /* 보통 기준값(신용 740~839점, 기존 자금 없음)으로 계산하는 간단 산식 */
   var RATE = {{ mfg: 1/4, whole: 1/6, svc: 1/6 }}, CAP = {{ 1: 3, 2: 10, 3: 15 }}, SC = 0.85;
   function calc() {{
-    var ind = val('ind'), rev = Number(val('rev')), age = val('age'), region = val('region');
-    var a = Math.min(Math.max(rev * RATE[ind], age !== '3' ? 1 : 0), CAP[age]) * SC;
+    var ind = val('ind'), rv = rev(), em = emp(), age = val('age'), region = val('region');
+    var a = Math.min(Math.max(rv * RATE[ind], age !== '3' ? 1 : 0), CAP[age]) * SC;
     var b = Math.max(0, Math.min(2, 8 - a)) * SC;
     var cLow = 1 * SC, cHigh = 2 * SC;
-    var dOk = rev <= 10, dTotal = (ind === 'mfg') ? 2 : 1;
+    var dOk = em < (ind === 'mfg' ? 10 : 5), dTotal = ind === 'mfg' ? 2 : 1;
     var dHigh = dOk ? dTotal * (region === 'local' ? 1 : 0.8) : 0, dLow = dOk ? Math.min(0.5, dHigh) : 0;
     var parts = [['A', a * 0.7, a], ['B', b * 0.7, b], ['C', cLow, cHigh], ['D', dLow, dHigh]];
     var low = 0, high = 0, doors = 0;
     parts.forEach(function (p) {{ low += p[1]; high += p[2]; if (p[2] >= 0.1) doors++; }});
-    var cap = Math.max(rev * 0.5, 1); /* 합계는 매출의 절반을 넘지 않게 */
+    var cap = Math.max(rv * 0.5, 1); /* 합계는 매출의 절반을 넘지 않게 */
     if (high > cap) {{ low = Math.min(low, cap * 0.7); high = cap; }}
     return {{ low: low, high: high, doors: doors, parts: parts }};
   }}
-  var form = $('qForm'), last = null;
-  function go(n) {{
-    form.querySelectorAll('.lim-page').forEach(function (pg) {{ pg.hidden = pg.dataset.page !== String(n); }});
+  var lastCalc = null;
+  function update() {{
+    $('revOut').textContent = (rev() >= 300 ? '300억 원 이상' : rev() + '억 원');
+    $('empOut').textContent = (emp() >= 100 ? '100명 이상' : emp() + '명');
+    var r = lastCalc = calc();
+    $('range').textContent = eok(r.low) + ' ~ ' + eok(r.high);
+    $('doors').textContent = '두드릴 수 있는 문 ' + r.doors + '곳 · 기존 자금·신용에 따라 달라집니다';
+  }}
+  ['revR', 'empR'].forEach(function (id) {{ $(id).addEventListener('input', update); }});
+  document.querySelectorAll('#qStep1 input[type=radio]').forEach(function (x) {{ x.addEventListener('change', update); }});
+  update();
+
+  function step(n) {{
+    $('qStep1').hidden = n !== 1; $('qStep2').hidden = n !== 2;
     document.querySelectorAll('.lim-prog li').forEach(function (li, i) {{ li.classList.toggle('on', i < n); }});
     $('calcNote').textContent = '';
     $('calcCard').scrollIntoView({{ behavior: 'smooth', block: 'start' }});
   }}
-  $('qNext').addEventListener('click', function () {{ go(2); }});
-  $('qBack').addEventListener('click', function () {{ go(1); }});
-  form.addEventListener('submit', function (e) {{
+  $('qNext').addEventListener('click', function () {{ step(2); }});
+  $('qBack').addEventListener('click', function () {{ step(1); }});
+  $('qStep2').addEventListener('submit', function (e) {{
     e.preventDefault();
     var biz = $('cBiz').value.replace(/\\D/g, '');
     if (!$('cName').value.trim()) {{ $('calcNote').textContent = '성함을 넣어 주세요.'; $('cName').focus(); return; }}
     if ($('cPhone').value.replace(/\\D/g, '').length < 9) {{ $('calcNote').textContent = '연락 가능한 번호를 넣어 주세요.'; $('cPhone').focus(); return; }}
     if (!validBiz(biz)) {{ $('calcNote').textContent = '사업자등록번호 10자리를 정확히 넣어 주세요.'; $('cBiz').focus(); return; }}
-    if (!$('cAgree').checked) {{ $('calcNote').textContent = '개인정보 수집·이용에 동의하셔야 결과를 보실 수 있습니다.'; $('cAgree').focus(); return; }}
-    var r = calc();
-    $('range').textContent = eok(r.low) + ' ~ ' + eok(r.high);
-    $('doors').textContent = '우리 회사가 두드릴 수 있는 문: ' + r.doors + '곳';
+    if (!$('cAgree').checked) {{ $('calcNote').textContent = '개인정보 수집·이용에 동의하셔야 다음 단계로 넘어갈 수 있습니다.'; $('cAgree').focus(); return; }}
+    var r = lastCalc;
     var info = [
       ['대표자', $('cName').value.trim()],
       ['연락처', $('cPhone').value.trim()],
       ['예상 한도', $('range').textContent],
       ['사업자번호', biz.replace(/(\\d{{3}})(\\d{{2}})(\\d{{5}})/, '$1-$2-$3')],
-      ['회사 개요', txt('ind') + ' · 매출 ' + txt('rev') + ' · 업력 ' + txt('age') + ' · ' + txt('region')],
+      ['회사 개요', txt('ind') + ' · 매출 ' + $('revOut').textContent + ' · 직원 ' + $('empOut').textContent + ' · 업력 ' + txt('age') + ' · ' + txt('region')],
       ['기관별 계산', r.parts.filter(function (p) {{ return p[2] > 0; }}).map(function (p) {{ return p[0] + ' ' + r1(p[1]) + '~' + r1(p[2]) + '억'; }}).join(' / ')],
-      ['참고', '신용·기존 자금 미입력 (보통 기준값으로 계산) · 광고용 30초 계산']
+      ['참고', '30초 계산(1단계) 후 최종 한도 계산으로 이동 · 신용·기존 자금 미입력']
     ];
-    var consent = '동의함 (' + new Date().toLocaleString('ko-KR') + ')';
-    last = {{ info: info, consent: consent }};
-    try {{ sessionStorage.setItem('bfCheck', JSON.stringify({{ name: $('cName').value.trim(), phone: $('cPhone').value.trim(), biz: $('cBiz').value.trim(), ind: val('ind'), age: val('age'), region: val('region') }})); }} catch (err) {{}}
     var fd = new FormData();
     info.forEach(function (x) {{ fd.append(x[0], x[1]); }});
-    fd.append('개인정보 동의', consent);
+    fd.append('개인정보 동의', '동의함 (' + new Date().toLocaleString('ko-KR') + ')');
     fd.append('_subject', '[30초 한도] ' + $('cName').value.trim() + ' / ' + $('cPhone').value.trim() + ' / ' + $('range').textContent);
-    sendForm(fd, '빠른계산').catch(function () {{}});
-    $('result').hidden = false; $('detail').hidden = false;
-    $('result').scrollIntoView({{ behavior: 'smooth', block: 'start' }});
-  }});
-  $('askBtn').addEventListener('click', function () {{
-    if (!last) return;
-    var btn = $('askBtn'); btn.disabled = true; $('askNote').textContent = '보내는 중입니다...';
-    var fd = new FormData();
-    fd.append('연락 희망 시간', $('askTime').value);
-    last.info.forEach(function (x) {{ fd.append(x[0], x[1]); }});
-    fd.append('개인정보 동의', last.consent);
-    fd.append('_subject', '[상담 신청] ' + last.info[0][1] + ' / ' + last.info[1][1] + ' (30초 계산)');
-    sendForm(fd, '상담신청')
-      .then(function (r) {{ if (!r.ok) throw new Error(); $('askBox').hidden = true; $('thanks').hidden = false; }})
-      .catch(function () {{ btn.disabled = false; $('askNote').textContent = '신청이 전송되지 않았습니다. 잠시 후 다시 눌러 주세요.'; }});
+    try {{ sessionStorage.setItem('bfCheck', JSON.stringify({{ name: $('cName').value.trim(), phone: $('cPhone').value.trim(), biz: $('cBiz').value.trim(), ind: val('ind'), age: val('age'), region: val('region'), rev: rev(), emp: emp(), agree: true }})); }} catch (err) {{}}
+    var btn = $('qStep2').querySelector('button[type=submit]');
+    btn.disabled = true; $('calcNote').textContent = '최종 한도 계산으로 이동합니다...';
+    var go = function () {{ location.href = '{BASE}/limit/'; }};
+    var t = setTimeout(go, 2500);
+    sendForm(fd, '빠른계산').then(function () {{ clearTimeout(t); go(); }}, function () {{ clearTimeout(t); go(); }});
   }});
 }})();
 </script>
 """
-    html = page(f"30초 예상 한도 | {SITE['title']}", "업종과 매출만 고르면 받을 수 있는 운전자금의 예상 범위를 30초 만에 보여드립니다.", FULL + "/check/", content)
+    html = page(f"30초 예상 한도 | {SITE['title']}", "매출과 직원 수만 움직이면 받을 수 있는 운전자금의 예상 범위를 30초 만에 보여드립니다.", FULL + "/check/", content)
     nav_old = html[html.index('<nav class="nav">'):html.index('</nav>') + 6]
     html = html.replace(nav_old, f'<nav class="nav">\n      <a class="nav-home" href="{SITE["homepage"]}">홈페이지</a>\n      <a class="nav-cta" href="#calcCard">30초 계산</a>\n    </nav>', 1)
     write("check/index.html", html)

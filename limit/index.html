@@ -292,6 +292,9 @@
     if (d.ind === 'mfg' || d.ind === 'whole') pick('ind', d.ind);
     if (d.age) pick('age', d.age);
     if (d.region) pick('region', d.region);
+    if (d.rev) $('rev').value = d.rev;
+    if (d.emp) $('emp').value = d.emp;
+    if (d.agree) $('cAgree').checked = true;
   })();
   function go(n) {
     calc.querySelectorAll('.lim-page').forEach(function (pg) { pg.hidden = pg.dataset.page !== String(n); });
