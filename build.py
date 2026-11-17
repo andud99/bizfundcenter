@@ -394,7 +394,7 @@ def build_limit():
                 <option value="2">BB+ 이상</option>
               </select>
             </label>
-            <label class="lim-in"><span>연평균 수출액 <small>(만 달러)</small></span><input id="exp" type="number" min="0" step="1" inputmode="numeric" value="0"></label>
+            <label class="lim-in"><span>연평균 수출액 <small>(억 원)</small></span><input id="exp" type="number" min="0" step="1" inputmode="decimal" value="0"></label>
           </div>
           <p class="lim-q">지금 쓰고 있는 정책자금 <small>(없으면 0)</small></p>
           <div class="lim-row2">
@@ -403,14 +403,6 @@ def build_limit():
             <label class="lim-in"><span>중진공 운전자금 <small>(억)</small></span><input id="useCamt" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
             <label class="lim-in"><span>소진공 직접대출 <small>(억)</small></span><input id="useD" type="number" min="0" step="0.1" inputmode="decimal" value="0"></label>
           </div>
-          <label class="lim-in">중진공 직접대출 받은 횟수
-            <select id="useC">
-              <option value="0">받은 적 없음</option>
-              <option value="1">1~2회 (올해는 아직)</option>
-              <option value="y">올해 이미 받음</option>
-              <option value="3">3회 모두 받음</option>
-            </select>
-          </label>
           <p class="lim-q">해당하는 것 모두</p>
           <div class="lim-tags">
             <label><input type="checkbox" name="cert"><span>벤처기업</span></label>
@@ -596,8 +588,9 @@ def build_limit():
     $('calcNote').textContent = '';
 
     var ind = val('ind'), age = val('age'), sc = val('score'), grade = $('grade').value;
-    var emp = num('emp'), exp = num('exp'), useA = num('useA'), useB = num('useB');
-    var useC = $('useC').value, useD = num('useD'), region = val('region');
+    var emp = num('emp'), expWon = num('exp'), useA = num('useA'), useB = num('useB');
+    var exp = expWon / (10000 * R.F.fx);  // 억 원 → 만 달러
+    var useD = num('useD'), region = val('region');
     var certs = calc.querySelectorAll('input[name=cert]:checked').length;
     var loss = val('profit') === 'minus';
     var adj = R.score[sc] * (loss ? R.loss : 1);
@@ -614,8 +607,8 @@ def build_limit():
     var room = R.B.totalCap - (useA + a + useB);
     var b = Math.max(0, Math.min(R.B.max - useB, room)) * R.score[sc];
 
-    // 갈래 C: 1년 1회, 최대 횟수
-    var cOk = useC === '0' || useC === '1';
+    // 갈래 C: 누적 상한 안에서
+    var cOk = true;
     var useCamt = num('useCamt');
     var ct = R.C.total[region];
     var cLow = cOk ? Math.min(R.C.low, Math.max(0, ct[0] - useCamt)) * adj : 0;
@@ -681,9 +674,9 @@ def build_limit():
       ['연락처', $('cPhone').value.trim()],
       ['예상 한도', $('range').textContent],
       ['회사 개요', txt('ind') + ' · 업력 ' + txt('age') + ' · ' + txt('region') + ' · 직원 ' + emp + '명'],
-      ['매출·결산', '매출 ' + rev + '억 · ' + (loss ? '적자' : '흑자') + (exp > 0 ? ' · 수출 ' + exp + '만 달러' : '')],
+      ['매출·결산', '매출 ' + rev + '억 · ' + (loss ? '적자' : '흑자') + (expWon > 0 ? ' · 수출 ' + expWon + '억' : '')],
       ['신용', '대표 ' + txt('score') + ' · 회사 등급 ' + txt('grade')],
-      ['기존 자금', 'A ' + useA + '억 · B ' + useB + '억 · C ' + useCamt + '억 (' + txt('useC') + ') · D ' + useD + '억'],
+      ['기존 자금', 'A ' + useA + '억 · B ' + useB + '억 · C ' + useCamt + '억 · D ' + useD + '억'],
       ['인증·특이사항', '인증 ' + certs + '개' + (extras.length ? ' · ' + extras.join(' · ') : '')],
       ['기관별 계산', calcLines || '없음']
     ];
@@ -1071,7 +1064,7 @@ def build_careers():
   <div class="wrap cr-in">
     <p class="lim-eyebrow2">TRAINING</p>
     <h2>컨설턴트 육성 과정</h2>
-    <p class="cr-lead">경력이 없어도 괜찮습니다. 세 단계로 기업 금융 전문가가 됩니다.</p>
+    <p class="cr-lead"><b>돈 내고 배우던 기업자금 실무, 여기서는 일하면서 배웁니다.</b><br>경력이 없어도 괜찮습니다. 세 단계로 기업 금융 전문가가 됩니다.</p>
     <ol class="cr-path">
       <li><b>기초</b><span>기업대출, 운전·시설·정책자금, 재무제표 읽는 법</span></li>
       <li><b>실무</b><span>선배와 함께 실제 업체 진행 · 담보대출, 설비자금, 기술금융</span></li>
