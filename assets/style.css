@@ -417,3 +417,4 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .q-step { font: inherit; font-size: 22px; font-weight: 700; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--white); color: var(--navy); cursor: pointer; line-height: 1; }
 .q-step:active { background: #fff1dc; border-color: var(--pink); }
 .q-range-row + .q-ticks { margin-left: 58px; margin-right: 58px; }
+.q-range-row + .q-ticks { margin: -6px 58px 0; }

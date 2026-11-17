@@ -349,9 +349,23 @@ def build_limit():
               <label><input type="radio" name="region" value="local"><span>지방</span></label>
             </div>
           </div>
-          <div class="lim-row2">
-            <label class="lim-in"><span>최근 1년 매출 <small>(억 원)</small></span><input id="rev" type="number" min="0" step="1" inputmode="decimal" placeholder="예: 25"></label>
-            <label class="lim-in"><span>상시 직원 수 <small>(명)</small></span><input id="emp" type="number" min="0" step="1" inputmode="numeric" placeholder="대표 제외"></label>
+          <div class="q-slide">
+            <div class="q-slide-top"><label for="rev" class="lim-q">최근 1년 매출</label><output id="revOut" for="rev">15억 원</output></div>
+            <div class="q-range-row">
+              <button type="button" class="q-step" data-t="rev" data-d="-1" aria-label="매출 1억 줄이기">−</button>
+              <input type="range" id="rev" min="1" max="300" step="1" value="15">
+              <button type="button" class="q-step" data-t="rev" data-d="1" aria-label="매출 1억 늘리기">+</button>
+            </div>
+            <div class="q-ticks" aria-hidden="true"><span style="left:0%">1억</span><span style="left:33.1%">100억</span><span style="left:66.6%">200억</span><span style="left:100%">300억+</span></div>
+          </div>
+          <div class="q-slide">
+            <div class="q-slide-top"><label for="emp" class="lim-q">상시 직원 수 <small>(대표 제외)</small></label><output id="empOut" for="emp">5명</output></div>
+            <div class="q-range-row">
+              <button type="button" class="q-step" data-t="emp" data-d="-1" aria-label="직원 1명 줄이기">−</button>
+              <input type="range" id="emp" min="0" max="100" step="1" value="5">
+              <button type="button" class="q-step" data-t="emp" data-d="1" aria-label="직원 1명 늘리기">+</button>
+            </div>
+            <div class="q-ticks" aria-hidden="true"><span style="left:0%">0명</span><span style="left:50%">50명</span><span style="left:100%">100명+</span></div>
           </div>
           <div class="lim-field"><p class="lim-q">최근 결산</p>
             <div class="lim-chips c2" role="radiogroup">
@@ -553,6 +567,19 @@ def build_limit():
     if (d.emp) $('emp').value = d.emp;
     if (d.agree) $('cAgree').checked = true;
   }})();
+  function showSl() {{
+    $('revOut').textContent = $('rev').value + (Number($('rev').value) >= 300 ? '억 원 이상' : '억 원');
+    $('empOut').textContent = $('emp').value + (Number($('emp').value) >= 100 ? '명 이상' : '명');
+  }}
+  ['rev', 'emp'].forEach(function (id) {{ $(id).addEventListener('input', showSl); }});
+  calc.querySelectorAll('.q-step[data-t]').forEach(function (b) {{
+    b.addEventListener('click', function () {{
+      var r = $(b.dataset.t);
+      r.value = Math.min(Number(r.max), Math.max(Number(r.min), Number(r.value) + Number(b.dataset.d)));
+      showSl();
+    }});
+  }});
+  showSl();
   function go(n) {{
     calc.querySelectorAll('.lim-page').forEach(function (pg) {{ pg.hidden = pg.dataset.page !== String(n); }});
     document.querySelectorAll('.lim-prog li').forEach(function (li, i) {{ li.classList.toggle('on', i < n); }});
