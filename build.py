@@ -432,14 +432,13 @@ def build_limit():
             <label class="lim-in">성함<input id="cName" type="text" autocomplete="name" placeholder="대표자 성함"></label>
             <label class="lim-in">회사명<input id="cCompany" type="text" autocomplete="organization"></label>
             <label class="lim-in">연락처<input id="cPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="010-0000-0000"></label>
-            <label class="lim-in">사업자등록번호<input id="cBiz" type="text" inputmode="numeric" placeholder="000-00-00000" maxlength="12"></label>
           </div>
           <div class="lim-consent">
             <label><input type="checkbox" id="cAgree"> 개인정보 수집·이용에 동의합니다 (필수)</label>
             <details>
               <summary>내용 보기</summary>
               <ul>
-                <li>수집 항목: 성함, 회사명, 연락처, 사업자등록번호, 이 화면에 입력한 회사 정보</li>
+                <li>수집 항목: 성함, 회사명, 연락처, 이 화면에 입력한 회사 정보</li>
                 <li>수집 목적: 예상 한도 안내 및 자금 상담 연락</li>
                 <li>보유 기간: 수집일로부터 1년. 기간이 지나거나 삭제를 요청하시면 지체 없이 파기합니다.</li>
                 <li>처리 위탁: 접수 내용은 양식 전송 서비스(Formspree, 미국)를 거쳐 기업자금센터 담당자 메일로 전달됩니다.</li>
@@ -543,13 +542,6 @@ def build_limit():
   }}
   function val(n) {{ var r = document.querySelector('input[name="' + n + '"]:checked'); return r ? r.value : $(n).value; }}
   function txt(n) {{ var r = document.querySelector('input[name="' + n + '"]:checked'); return r ? r.nextElementSibling.textContent : $(n).selectedOptions[0].text; }}
-  function validBiz(d) {{
-    if (!/^\\d{{10}}$/.test(d)) return false;
-    var w = [1, 3, 7, 1, 3, 7, 1, 3, 5], sum = 0;
-    for (var i = 0; i < 9; i++) sum += Number(d[i]) * w[i];
-    sum += Math.floor(Number(d[8]) * 5 / 10);
-    return (10 - (sum % 10)) % 10 === Number(d[9]);
-  }}
 
   var calc = $('calcForm');
   (function prefill() {{
@@ -558,7 +550,6 @@ def build_limit():
     if (!d) return;
     if (d.name) $('cName').value = d.name;
     if (d.phone) $('cPhone').value = d.phone;
-    if (d.biz) $('cBiz').value = d.biz;
     function pick(n, v) {{ var r = document.querySelector('input[name="' + n + '"][value="' + v + '"]'); if (r) r.checked = true; }}
     if (d.ind === 'mfg' || d.ind === 'whole') pick('ind', d.ind);
     if (d.age) pick('age', d.age);
@@ -597,12 +588,10 @@ def build_limit():
     e.preventDefault();
     var rev = parseFloat($('rev').value);
     if (!(rev >= 0)) {{ go(1); $('calcNote').textContent = '최근 1년 매출을 숫자로 넣어 주세요.'; $('rev').focus(); return; }}
-    var bizDigits = $('cBiz').value.replace(/\\D/g, '');
     var phoneDigits = $('cPhone').value.replace(/\\D/g, '');
     if (!$('cName').value.trim()) {{ $('calcNote').textContent = '성함을 넣어 주세요.'; $('cName').focus(); return; }}
     if (!$('cCompany').value.trim()) {{ $('calcNote').textContent = '회사명을 넣어 주세요.'; $('cCompany').focus(); return; }}
     if (phoneDigits.length < 9) {{ $('calcNote').textContent = '연락 가능한 번호를 넣어 주세요.'; $('cPhone').focus(); return; }}
-    if (!validBiz(bizDigits)) {{ $('calcNote').textContent = '사업자등록번호 10자리를 정확히 넣어 주세요.'; $('cBiz').focus(); return; }}
     if (!$('cAgree').checked) {{ $('calcNote').textContent = '개인정보 수집·이용에 동의하셔야 결과를 보실 수 있습니다.'; $('cAgree').focus(); return; }}
     $('calcNote').textContent = '';
 
@@ -691,7 +680,6 @@ def build_limit():
       ['대표자', $('cName').value.trim()],
       ['연락처', $('cPhone').value.trim()],
       ['예상 한도', $('range').textContent],
-      ['사업자번호', bizDigits.replace(/(\\d{{3}})(\\d{{2}})(\\d{{5}})/, '$1-$2-$3')],
       ['회사 개요', txt('ind') + ' · 업력 ' + txt('age') + ' · ' + txt('region') + ' · 직원 ' + emp + '명'],
       ['매출·결산', '매출 ' + rev + '억 · ' + (loss ? '적자' : '흑자') + (exp > 0 ? ' · 수출 ' + exp + '만 달러' : '')],
       ['신용', '대표 ' + txt('score') + ' · 회사 등급 ' + txt('grade')],
@@ -864,13 +852,12 @@ def build_check():
         <p class="lim-q">최종 한도를 받아 보실 연락처</p>
         <label class="lim-in">성함<input id="cName" type="text" autocomplete="name" placeholder="대표자 성함"></label>
         <label class="lim-in">연락처<input id="cPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="010-0000-0000"></label>
-        <label class="lim-in">사업자등록번호<input id="cBiz" type="text" inputmode="numeric" placeholder="000-00-00000" maxlength="12"></label>
         <div class="lim-consent">
           <label><input type="checkbox" id="cAgree"> 개인정보 수집·이용에 동의합니다 (필수)</label>
           <details>
             <summary>내용 보기</summary>
             <ul>
-              <li>수집 항목: 성함, 연락처, 사업자등록번호, 이 화면에서 고른 회사 정보</li>
+              <li>수집 항목: 성함, 연락처, 이 화면에서 고른 회사 정보</li>
               <li>수집 목적: 예상 한도 안내 및 자금 상담 연락</li>
               <li>보유 기간: 수집일로부터 1년. 기간이 지나거나 삭제를 요청하시면 지체 없이 파기합니다.</li>
               <li>처리: 접수 내용은 기업자금센터 담당자에게만 전달됩니다.</li>
@@ -893,13 +880,6 @@ def build_check():
   function txt(n) {{ return document.querySelector('input[name="' + n + '"]:checked').nextElementSibling.textContent; }}
   function eok(v) {{ if (v < 1) return Math.round(v * 10) * 1000 + '만 원'; return (Math.round(v * 10) / 10).toString().replace(/\\.0$/, '') + '억 원'; }}
   function r1(v) {{ return Math.round(v * 10) / 10; }}
-  function validBiz(d) {{
-    if (!/^\\d{{10}}$/.test(d)) return false;
-    var w = [1, 3, 7, 1, 3, 7, 1, 3, 5], s = 0;
-    for (var i = 0; i < 9; i++) s += Number(d[i]) * w[i];
-    s += Math.floor(Number(d[8]) * 5 / 10);
-    return (10 - (s % 10)) % 10 === Number(d[9]);
-  }}
   var EMPS = [1, 2, 3, 4, 5, 7, 10, 15, 20, 30, 50, 100];
   function rev() {{ return Number($('revR').value); }}
   function emp() {{ return EMPS[Number($('empR').value)]; }}
@@ -944,17 +924,14 @@ def build_check():
   $('qBack').addEventListener('click', function () {{ step(1); }});
   $('qStep2').addEventListener('submit', function (e) {{
     e.preventDefault();
-    var biz = $('cBiz').value.replace(/\\D/g, '');
     if (!$('cName').value.trim()) {{ $('calcNote').textContent = '성함을 넣어 주세요.'; $('cName').focus(); return; }}
     if ($('cPhone').value.replace(/\\D/g, '').length < 9) {{ $('calcNote').textContent = '연락 가능한 번호를 넣어 주세요.'; $('cPhone').focus(); return; }}
-    if (!validBiz(biz)) {{ $('calcNote').textContent = '사업자등록번호 10자리를 정확히 넣어 주세요.'; $('cBiz').focus(); return; }}
     if (!$('cAgree').checked) {{ $('calcNote').textContent = '개인정보 수집·이용에 동의하셔야 다음 단계로 넘어갈 수 있습니다.'; $('cAgree').focus(); return; }}
     var r = lastCalc;
     var info = [
       ['대표자', $('cName').value.trim()],
       ['연락처', $('cPhone').value.trim()],
       ['예상 한도', $('range').textContent],
-      ['사업자번호', biz.replace(/(\\d{{3}})(\\d{{2}})(\\d{{5}})/, '$1-$2-$3')],
       ['회사 개요', txt('ind') + ' · 매출 ' + $('revOut').textContent + ' · 직원 ' + $('empOut').textContent + ' · 업력 ' + txt('age') + ' · ' + txt('region')],
       ['기관별 계산', r.parts.filter(function (p) {{ return p[2] > 0; }}).map(function (p) {{ return p[0] + ' ' + r1(p[1]) + '~' + r1(p[2]) + '억'; }}).join(' / ')],
       ['참고', '30초 계산(1단계) 후 최종 한도 계산으로 이동 · 신용·기존 자금 미입력']
@@ -963,7 +940,7 @@ def build_check():
     info.forEach(function (x) {{ fd.append(x[0], x[1]); }});
     fd.append('개인정보 동의', '동의함 (' + new Date().toLocaleString('ko-KR') + ')');
     fd.append('_subject', '[30초 한도] ' + $('cName').value.trim() + ' / ' + $('cPhone').value.trim() + ' / ' + $('range').textContent);
-    try {{ sessionStorage.setItem('bfCheck', JSON.stringify({{ name: $('cName').value.trim(), phone: $('cPhone').value.trim(), biz: $('cBiz').value.trim(), ind: val('ind'), age: val('age'), region: val('region'), rev: rev(), emp: emp(), agree: true }})); }} catch (err) {{}}
+    try {{ sessionStorage.setItem('bfCheck', JSON.stringify({{ name: $('cName').value.trim(), phone: $('cPhone').value.trim(), ind: val('ind'), age: val('age'), region: val('region'), rev: rev(), emp: emp(), agree: true }})); }} catch (err) {{}}
     var btn = $('qStep2').querySelector('button[type=submit]');
     btn.disabled = true; $('calcNote').textContent = '최종 한도 계산으로 이동합니다...';
     var go = function () {{ location.href = '{BASE}/limit/'; }};
