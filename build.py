@@ -1053,6 +1053,19 @@ def build_careers():
   </div>
 </section>
 
+<section class="cr-sec" id="worktime">
+  <div class="wrap cr-in">
+    <p class="lim-eyebrow2">WORK STYLE</p>
+    <h2>출근은 함께, 퇴근은 자유롭게</h2>
+    <p class="cr-lead">아침은 팀과 함께 배우며 시작하고, 이후 일정은 스스로 관리합니다.</p>
+    <ul class="cr-cards c3">
+      <li><b>오전 8시, 함께 여는 하루</b><span>매일 아침 진행 사례와 정보를 나누고, 강의식 교육으로 실력을 쌓습니다.</span></li>
+      <li><b>정해진 퇴근 시간 없음</b><span>하루 일정을 마치면 자유롭게 퇴근합니다. 시간보다 성과로 일합니다.</span></li>
+      <li><b>미팅 있는 날은 현장으로 바로</b><span>아침에 고객 미팅이 있으면 사무실에 들르지 않고 바로 현장으로 갑니다.</span></li>
+    </ul>
+  </div>
+</section>
+
 <section class="cr-sec alt" id="training">
   <div class="wrap cr-in">
     <p class="lim-eyebrow2">TRAINING</p>
