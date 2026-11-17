@@ -418,3 +418,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .q-step:active { background: #fff1dc; border-color: var(--pink); }
 .q-range-row + .q-ticks { margin-left: 58px; margin-right: 58px; }
 .q-range-row + .q-ticks { margin: -6px 58px 0; }
+.cr-quote { margin: 18px 0 22px; padding: 18px 20px; border-left: 4px solid var(--pink); background: #fff7ec; border-radius: 0 12px 12px 0; display: grid; gap: 6px; }
+.cr-quote b { font-size: 18px; line-height: 1.45; }
+.cr-quote span { color: var(--muted); line-height: 1.6; }
+.cr-path { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; counter-reset: st; }
+.cr-path li { counter-increment: st; display: grid; grid-template-columns: 52px 1fr; gap: 4px 14px; align-items: center; background: #fff; border: 1px solid var(--line, #e6e6e6); border-radius: 14px; padding: 16px 18px; }
+.cr-path li::before { content: "0" counter(st); grid-row: span 2; font-size: 26px; font-weight: 800; color: var(--pink); }
+.cr-path b { font-size: 17px; }
+.cr-path span { color: var(--muted); line-height: 1.55; font-size: 15px; }
+@media (min-width: 900px) { .cr-path { grid-template-columns: repeat(3, 1fr); } }

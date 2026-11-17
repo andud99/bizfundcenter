@@ -1058,6 +1058,7 @@ def build_careers():
     <p class="lim-eyebrow2">WORK STYLE</p>
     <h2>출근은 함께, 퇴근은 자유롭게</h2>
     <p class="cr-lead">아침은 팀과 함께 배우며 시작하고, 이후 일정은 스스로 관리합니다.</p>
+    <div class="cr-quote"><b>소득은 일한 시간이 아니라, 진행하는 업체 수에서 나옵니다.</b><span>진행 업체가 쌓이면 적게 일해도 소득은 유지되고, 남는 시간은 내 것이 됩니다.</span></div>
     <ul class="cr-cards c3">
       <li><b>오전 8시, 함께 여는 하루</b><span>매일 아침 진행 사례와 정보를 나누고, 강의식 교육으로 실력을 쌓습니다.</span></li>
       <li><b>정해진 퇴근 시간 없음</b><span>하루 일정을 마치면 자유롭게 퇴근합니다. 시간보다 성과로 일합니다.</span></li>
@@ -1070,12 +1071,11 @@ def build_careers():
   <div class="wrap cr-in">
     <p class="lim-eyebrow2">TRAINING</p>
     <h2>컨설턴트 육성 과정</h2>
-    <p class="cr-lead">처음이어도 괜찮습니다. 단계별 교육으로 기업 금융 전문가로 성장합니다.</p>
-    <ol class="cr-steps">
-      <li><p class="cr-st">입문 과정</p><ul><li>기업대출 기초</li><li>운전자금 기초</li><li>시설자금 기초</li><li>정책자금 기초</li><li>재무제표 기초</li></ul></li>
-      <li><p class="cr-st">육성 과정 Ⅰ·Ⅱ</p><ul><li>공장 담보대출</li><li>기계설비자금</li><li>보증기금대출</li><li>기술금융</li></ul></li>
-      <li><p class="cr-st">중급 과정 Ⅰ</p><ul><li>대환대출 중급</li><li>재무제표 중급</li><li>보증서 중급</li><li>시설자금 중급</li></ul></li>
-      <li><p class="cr-st">중급 과정 Ⅱ</p><ul><li>재무제표 상급</li><li>경영컨설팅 중급</li><li>기업인증 중급</li><li>기업등급 진단 중급</li></ul></li>
+    <p class="cr-lead">경력이 없어도 괜찮습니다. 세 단계로 기업 금융 전문가가 됩니다.</p>
+    <ol class="cr-path">
+      <li><b>기초</b><span>기업대출, 운전·시설·정책자금, 재무제표 읽는 법</span></li>
+      <li><b>실무</b><span>선배와 함께 실제 업체 진행 · 담보대출, 설비자금, 기술금융</span></li>
+      <li><b>심화</b><span>대환 설계, 재무 분석, 기업인증, 등급 진단, 경영 자문</span></li>
     </ol>
   </div>
 </section>
