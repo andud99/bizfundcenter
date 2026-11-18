@@ -122,7 +122,26 @@
 (function () {
   var FORM_URL = 'https://formspree.io/f/xovkbbkg';
   var GAS_URL = "https://script.google.com/macros/s/AKfycbwYFzeX8odlrVgA9krs1p2Ke25Qn_2YsoEUCERWiMATqzFkBuNNLxcCgISFYvDv1VL1tg/exec";
+  var BF_SRC = (function () {
+    var m = location.search.match(/[?&]utm_source=([^&]+)/), s = m ? decodeURIComponent(m[1]) : '';
+    try { if (s) sessionStorage.setItem('bfSrc', s); else s = sessionStorage.getItem('bfSrc') || ''; } catch (e) {}
+    if (!s && document.referrer && document.referrer.indexOf(location.host) < 0) { try { s = new URL(document.referrer).hostname; } catch (e) {} }
+    try { if (s) sessionStorage.setItem('bfSrc', s); } catch (e) {}
+    return s;
+  })();
+  function srcLabel(s) {
+    if (!s) return '직접 방문 (알 수 없음)';
+    var M = { meta: '메타 광고', daangn: '당근 광고', naver: '네이버', google: '구글' };
+    if (M[s]) return M[s];
+    if (/facebook|instagram/.test(s)) return '메타 (페이스북·인스타 링크)';
+    if (/daangn|karrot/.test(s)) return '당근';
+    if (/naver/.test(s)) return '네이버 (검색·블로그)';
+    if (/google/.test(s)) return '구글 검색';
+    if (/bizfunding/.test(s)) return '기업자금센터 홈페이지';
+    return s;
+  }
   function sendForm(fd, type) {
+    if (!fd.has('유입 경로')) fd.append('유입 경로', srcLabel(BF_SRC));
     if (!GAS_URL) return fetch(FORM_URL, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
     var pairs = [], subj = '';
     fd.forEach(function (v, k) { if (k === '_subject') subj = v; else if (k.charAt(0) !== '_') pairs.push([k, String(v)]); });
