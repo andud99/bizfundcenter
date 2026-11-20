@@ -72,8 +72,8 @@ def build_site_pages(posts, ctx):
     </div>
     <ul class="hm-stats">
       <li><b>{years}년</b><span>{SITE.get('since', '2013')}년부터 기업자금 현장</span></li>
-      <li><b>{SITE.get('team', '9')}명</b><span>자금·세무·구조 전문 인력</span></li>
-      <li><b>{len(results)}건</b><span>2026년 상반기 공개 지원사례</span></li>
+      <li><b>{SITE.get('team', '85')}명</b><span>지점 자금·세무·구조 전문 인력</span></li>
+      <li><b>{SITE.get('cases_year', '315')}건</b><span>지점 연간 자금 진행</span></li>
     </ul>
   </div>
 </section>
