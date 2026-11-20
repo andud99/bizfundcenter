@@ -440,21 +440,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .nav-item > a { display: inline-block; padding: 10px 0; }
 
 @media (max-width: 960px) {
-  .masthead-row { flex-wrap: nowrap; }
+  .site-head .masthead-row { flex-wrap: nowrap; }
   .nav-burger { display: block; width: 40px; height: 40px; position: relative; cursor: pointer; }
   .nav-burger span, .nav-burger span::before, .nav-burger span::after { position: absolute; left: 9px; width: 22px; height: 2px; background: var(--white); content: ""; }
   .nav-burger span { top: 19px; }
   .nav-burger span::before { top: -7px; left: 0; }
   .nav-burger span::after { top: 7px; left: 0; }
-  .nav-toggle ~ .nav { display: none; }
-  .nav-toggle:checked ~ .nav { display: flex; flex-direction: column; align-items: stretch; gap: 0; position: absolute; left: 0; right: 0; top: 100%; background: var(--navy); padding: 6px 20px 20px; z-index: 30; font-size: 16px; box-shadow: 0 12px 24px rgba(0,0,0,.25); }
-  .masthead { position: relative; }
-  .nav-toggle:checked ~ .nav .nav-item { border-bottom: 1px solid rgba(255,255,255,.12); }
-  .nav-toggle:checked ~ .nav .nav-item > a { padding: 12px 0; font-weight: 600; opacity: 1; }
-  .nav-toggle:checked ~ .nav .nav-sub { display: flex; flex-wrap: wrap; gap: 4px 16px; position: static; background: none; box-shadow: none; padding: 0 0 12px; min-width: 0; }
-  .nav-toggle:checked ~ .nav .nav-sub a { color: var(--white); padding: 2px 0; opacity: .75; font-size: 15px; }
-  .nav-toggle:checked ~ .nav .nav-sub a:hover { background: none; opacity: 1; }
-  .nav-toggle:checked ~ .nav .nav-cta { margin-top: 16px; text-align: center; padding: 12px; }
+  .site-head .nav-toggle ~ .nav { display: none; }
+  .site-head .nav-toggle:checked ~ .nav { display: flex; flex-direction: column; align-items: stretch; gap: 0; position: absolute; left: 0; right: 0; top: 100%; background: var(--navy); padding: 6px 20px 20px; z-index: 30; font-size: 16px; box-shadow: 0 12px 24px rgba(0,0,0,.25); }
+  .site-head { position: relative; }
+  .site-head .nav-toggle:checked ~ .nav .nav-item { border-bottom: 1px solid rgba(255,255,255,.12); }
+  .site-head .nav-toggle:checked ~ .nav .nav-item > a { padding: 12px 0; font-weight: 600; opacity: 1; }
+  .site-head .nav-toggle:checked ~ .nav .nav-sub { display: flex; flex-wrap: wrap; gap: 4px 16px; position: static; background: none; box-shadow: none; padding: 0 0 12px; min-width: 0; }
+  .site-head .nav-toggle:checked ~ .nav .nav-sub a { color: var(--white); padding: 2px 0; opacity: .75; font-size: 15px; }
+  .site-head .nav-toggle:checked ~ .nav .nav-sub a:hover { background: none; opacity: 1; }
+  .site-head .nav-toggle:checked ~ .nav .nav-cta { margin-top: 16px; text-align: center; padding: 12px; }
 }
 
 .btn-ghost { background: transparent; color: var(--navy); box-shadow: inset 0 0 0 2px var(--navy); }
@@ -551,8 +551,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .sp-photo { display: block; width: 100%; max-width: 420px; height: auto; margin: 0 0 32px; border-radius: 6px; }
 
 /* 상단 바 키우기 */
-.masthead-row { min-height: 76px; }
-.masthead .brand { font-size: 23px; }
-.masthead .nav { font-size: 16px; gap: 22px; }
-.masthead .nav .nav-cta { padding: 9px 18px; font-size: 16px; }
-@media (max-width: 960px) { .masthead-row { min-height: 64px; } .masthead .brand { font-size: 21px; } }
+.site-head .masthead-row { min-height: 76px; }
+.site-head .brand { font-size: 23px; }
+.site-head .nav { font-size: 16px; gap: 22px; }
+.site-head .nav .nav-cta { padding: 9px 18px; font-size: 16px; }
+@media (max-width: 960px) { .site-head .masthead-row { min-height: 64px; } .site-head .brand { font-size: 21px; } }

@@ -99,7 +99,7 @@ HEAD = """<!doctype html>
 <link rel="stylesheet" href="{base}/assets/style.css">
 </head>
 <body>
-<header class="masthead">
+<header class="masthead site-head">
   <div class="wrap wide masthead-row">
     <a class="brand" href="{base}/"><b>기업</b>자금센터</a>
     <input type="checkbox" id="navToggle" class="nav-toggle" aria-label="메뉴 열기">
@@ -325,7 +325,7 @@ def build_apply():
 }})();
 </script>
 """
-    write("apply/index.html", page(f"무료 상담 신청 | {SITE['title']}", "회사 상황에 맞는 정책자금과 신청 순서를 무료로 상담해 드립니다.", FULL + "/apply/", content))
+    write("apply/index.html", page("무료 상담 신청 | 기업자금센터", "회사 상황에 맞는 정책자금과 신청 순서를 무료로 상담해 드립니다.", FULL + "/apply/", content))
 
 
 def build_limit():
@@ -749,7 +749,7 @@ def build_limit():
 }})();
 </script>
 """
-    write("limit/index.html", page(f"예상 운전자금 한도 계산 | {SITE['title']}", "업종, 매출, 신용, 지금 쓰는 정책자금을 넣으면 받을 수 있는 운전자금의 대략적인 범위를 보여드립니다.", FULL + "/limit/", content))
+    write("limit/index.html", page("예상 운전자금 한도 계산 | 기업자금센터", "업종, 매출, 신용, 지금 쓰는 정책자금을 넣으면 받을 수 있는 운전자금의 대략적인 범위를 보여드립니다.", FULL + "/limit/", content))
 
 
 def build_results():
@@ -810,7 +810,7 @@ def build_results():
 }})();
 </script>
 """
-    write("results/index.html", page(f"지원 사례 모음 | {SITE['title']}", f"기업자금센터가 2026년 상반기에 진행한 자금 사례 {len(data)}건. 업종, 지역, 매출 규모별로 어떤 자금을 얼마나 마련했는지 확인해 보세요.", FULL + "/results/", content))
+    write("results/index.html", page("지원 사례 모음 | 기업자금센터", f"기업자금센터가 2026년 상반기에 진행한 자금 사례 {len(data)}건. 업종, 지역, 매출 규모별로 어떤 자금을 얼마나 마련했는지 확인해 보세요.", FULL + "/results/", content))
 
 
 def build_check():
@@ -979,9 +979,9 @@ def build_check():
 }})();
 </script>
 """
-    html = page(f"30초 예상 한도 | {SITE['title']}", "매출과 직원 수만 움직이면 받을 수 있는 운전자금의 예상 범위를 30초 만에 보여드립니다.", FULL + "/check/", content)
+    html = page("30초 예상 한도 | 기업자금센터", "매출과 직원 수만 움직이면 받을 수 있는 운전자금의 예상 범위를 30초 만에 보여드립니다.", FULL + "/check/", content)
     nav_old = html[html.index('<nav class="nav">'):html.index('</nav>') + 6]
-    html = html.replace(BURGER, "", 1)
+    html = html.replace(BURGER, "", 1).replace('class="masthead site-head"', 'class="masthead"', 1)
     html = html.replace(nav_old, f'<nav class="nav">\n      <a class="nav-home" href="{SITE["homepage"]}">홈페이지</a>\n      <a class="nav-cta" href="#calcCard">30초 계산</a>\n    </nav>', 1)
     write("check/index.html", html)
 
@@ -1190,12 +1190,12 @@ def build_careers():
 }})();
 </script>
 """
-    html = page(f"입사 지원 | {SITE['title']}", "기업자금센터에서 중소기업 대표님과 함께 자금·세금·구조 전략을 설계할 인재를 찾습니다. 체계적인 교육과 성과에 맞는 보상.", FULL + "/careers/", content)
+    html = page("입사 지원 | 기업자금센터", "기업자금센터에서 중소기업 대표님과 함께 자금·세금·구조 전략을 설계할 인재를 찾습니다. 체계적인 교육과 성과에 맞는 보상.", FULL + "/careers/", content)
     html = html.replace(f'<a class="brand" href="{BASE}/"><b>기업</b>자금센터</a>', f'<div class="mh-brand"><a class="brand" href="{BASE}/careers/"><b>기업</b>자금센터 <span>인재 채용</span></a><a class="mh-home" href="{SITE["homepage"]}">홈페이지</a></div>', 1)
     nav_old = html[html.index('<nav class="nav">'):html.index('</nav>') + 6]
     nav_new = (f'<nav class="nav">\n      <a href="#income">소득 수준</a>\n      <a href="#training">육성 과정</a>\n'
                f'      <a href="#req">지원 자격</a>\n      <a class="nav-home" href="{SITE["homepage"]}">홈페이지</a>\n      <a class="nav-cta" href="#applyCard">지원하기</a>\n    </nav>')
-    html = html.replace(BURGER, "", 1)
+    html = html.replace(BURGER, "", 1).replace('class="masthead site-head"', 'class="masthead"', 1)
     html = html.replace(nav_old, nav_new, 1)
     write("careers/index.html", html)
 
