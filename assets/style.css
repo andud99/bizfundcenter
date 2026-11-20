@@ -548,3 +548,4 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .hm-sec { padding-top: 48px; padding-bottom: 48px; }
   .btn { padding: 12px 18px; }
 }
+.sp-photo { display: block; width: 100%; max-width: 420px; height: auto; margin: 0 0 32px; border-radius: 6px; }

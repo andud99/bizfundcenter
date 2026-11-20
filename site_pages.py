@@ -105,10 +105,14 @@ def build_site_pages(posts, ctx):
         ("다양한 영역", "자금 외에도 인증, 재무관리 등 기업에 필요한 종합 컨설팅을 제공합니다."),
         ("지속 가능한 성장", "끊임없는 변화와 혁신으로 고객과 함께 성장하는 것을 목표로 합니다."),
     ]
+    # 사진: assets/about/ceo.jpg 파일을 넣으면 자동으로 인사말에 나온다 (없으면 글만)
+    photo = ""
+    if (ROOT / "assets" / "about" / "ceo.jpg").exists():
+        photo = f'<img class="sp-photo" src="{BASE}/assets/about/ceo.jpg" alt="기업자금센터 대표 {esc(SITE.get('ceo', ''))}" width="875" height="1024">'
     vis = "".join(f'<li><b>0{i + 1}</b><h3>{esc(t)}</h3><p>{esc(d)}</p></li>' for i, (t, d) in enumerate(vision))
     about = f"""{sub_hero('회사소개', '인사말', '기업의 지속성장을 함께 설계하는 전략 파트너')}
 <section class="wrap wide sp-body sp-split">
-  <blockquote class="sp-quote">기업의 지속성장을 함께 설계하는<br>당신의 전략 파트너.</blockquote>
+  <div>{photo}<blockquote class="sp-quote">기업의 지속성장을 함께 설계하는<br>당신의 전략 파트너.</blockquote></div>
   <div class="prose">
     <p>안녕하십니까.</p>
     <p>저희 기업자금센터는 급변하는 경영환경 속에서 중소·중견기업이 겪는 자금조달의 어려움과 경영의 불확실성을 해결하기 위해 설립되었습니다.</p>
