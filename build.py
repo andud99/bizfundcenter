@@ -14,6 +14,8 @@ from pathlib import Path
 
 import markdown
 
+from site_pages import build_site_pages
+
 ROOT = Path(__file__).parent
 SITE = json.loads((ROOT / "site.json").read_text(encoding="utf-8"))
 BASE = SITE["base"].rstrip("/")
@@ -29,7 +31,7 @@ CATEGORIES = {
     "공고 체크": "notice",
 }
 WEEKDAYS = ["월", "화", "수", "목", "금", "토", "일"]
-GENERATED_DIRS = ["p", "c"]
+GENERATED_DIRS = ["p", "c", "info", "about", "funding", "support", "privacy", "contact"]
 
 
 def esc(s):
@@ -98,13 +100,18 @@ HEAD = """<!doctype html>
 </head>
 <body>
 <header class="masthead">
-  <div class="wrap masthead-row">
-    <a class="brand" href="{base}/">기업자금센터 <span>자금정보</span></a>
+  <div class="wrap wide masthead-row">
+    <a class="brand" href="{base}/"><b>기업</b>자금센터</a>
+    <input type="checkbox" id="navToggle" class="nav-toggle" aria-label="메뉴 열기">
+    <label for="navToggle" class="nav-burger" aria-hidden="true"><span></span></label>
     <nav class="nav">
-      <a href="{base}/">전체 글</a>
-      <a href="{base}/results/">지원 사례</a>
-      <a href="{base}/limit/">한도 계산</a>
-      <a href="{home}" rel="noopener">기업자금센터 홈</a>
+      <div class="nav-item"><a href="{base}/about/">회사소개</a><div class="nav-sub"><a href="{base}/about/">인사말</a><a href="{base}/about/location/">오시는 길</a></div></div>
+      <div class="nav-item"><a href="{base}/funding/working/">자금지원</a><div class="nav-sub"><a href="{base}/funding/working/">운전자금</a><a href="{base}/funding/facility/">시설자금</a></div></div>
+      <div class="nav-item"><a href="{base}/support/">경영지원</a><div class="nav-sub"><a href="{base}/support/#certification">인증지원</a><a href="{base}/support/#finance">경영·재무지원</a></div></div>
+      <div class="nav-item"><a href="{base}/info/">자금정보</a></div>
+      <div class="nav-item"><a href="{base}/results/">지원사례</a></div>
+      <div class="nav-item"><a href="{base}/limit/">한도산출</a></div>
+      <div class="nav-item"><a href="{base}/careers/">입사지원</a></div>
       <a class="nav-cta" href="{base}/apply/">상담 신청</a>
     </nav>
   </div>
@@ -114,21 +121,30 @@ HEAD = """<!doctype html>
 
 FOOT = """</main>
 <footer class="foot">
-  <div class="wrap foot-row">
+  <div class="wrap wide foot-row">
     <div>
       <p class="foot-brand">기업자금센터</p>
-      <p>{address}</p>
-      <p>2013년부터 정책자금·운전자금·시설자금 컨설팅</p>
+      <p>{address}<br>T. {phone} · {email}</p>
+      <p>대표 {ceo} · 사업자등록번호 {bizno}</p>
+      <p>2013년부터 운전자금·시설자금·정책자금 컨설팅</p>
     </div>
     <div class="foot-links">
-      <a href="{home}" rel="noopener">홈페이지</a>
+      <a href="{base}/about/">회사소개</a>
+      <a href="{base}/info/">자금정보</a>
+      <a href="{base}/results/">지원사례</a>
       <a href="{base}/apply/">상담 신청</a>
+      <a href="{base}/privacy/">개인정보처리방침</a>
     </div>
   </div>
-  <div class="wrap"><p class="foot-note">칼럼은 일반적인 정보 제공을 위한 글입니다. 실제 자금 신청 요건과 한도는 기관 공고와 회사 상황에 따라 달라집니다.</p></div>
+  <div class="wrap wide"><p class="foot-note">자금정보의 글은 일반적인 정보 제공을 위한 것입니다. 실제 자금 신청 요건과 한도는 기관 공고와 회사 상황에 따라 달라집니다.</p></div>
 </footer>
 </body>
 </html>
+"""
+
+
+BURGER = """    <input type="checkbox" id="navToggle" class="nav-toggle" aria-label="메뉴 열기">
+    <label for="navToggle" class="nav-burger" aria-hidden="true"><span></span></label>
 """
 
 
@@ -136,7 +152,8 @@ def page(title, desc, canonical, content, ogtype="website"):
     ctx = dict(
         title=esc(title), desc=esc(desc), canonical=esc(canonical), ogtype=ogtype,
         site=esc(SITE["title"]), full=FULL, base=BASE, home=esc(SITE["homepage"]),
-        address=esc(SITE["address"]),
+        address=esc(SITE["address"]), phone=esc(SITE["phone"]), email=esc(SITE["email"]),
+        ceo=esc(SITE["ceo"]), bizno=esc(SITE["bizno"]),
     )
     return HEAD.format(**ctx) + content + FOOT.format(**ctx)
 
@@ -282,7 +299,7 @@ def build_apply():
   <div id="thanks" class="thanks" hidden>
     <h2>상담 신청이 접수되었습니다</h2>
     <p>담당자가 확인 후 영업일 기준 1~2일 안에 연락드립니다.</p>
-    <a class="more" href="{BASE}/">칼럼 계속 읽기</a>
+    <a class="more" href="{BASE}/info/">자금정보 읽기</a>
   </div>
 </section>
 <script>
@@ -964,6 +981,7 @@ def build_check():
 """
     html = page(f"30초 예상 한도 | {SITE['title']}", "매출과 직원 수만 움직이면 받을 수 있는 운전자금의 예상 범위를 30초 만에 보여드립니다.", FULL + "/check/", content)
     nav_old = html[html.index('<nav class="nav">'):html.index('</nav>') + 6]
+    html = html.replace(BURGER, "", 1)
     html = html.replace(nav_old, f'<nav class="nav">\n      <a class="nav-home" href="{SITE["homepage"]}">홈페이지</a>\n      <a class="nav-cta" href="#calcCard">30초 계산</a>\n    </nav>', 1)
     write("check/index.html", html)
 
@@ -1173,10 +1191,11 @@ def build_careers():
 </script>
 """
     html = page(f"입사 지원 | {SITE['title']}", "기업자금센터에서 중소기업 대표님과 함께 자금·세금·구조 전략을 설계할 인재를 찾습니다. 체계적인 교육과 성과에 맞는 보상.", FULL + "/careers/", content)
-    html = html.replace(f'<a class="brand" href="{BASE}/">기업자금센터 <span>자금정보</span></a>', f'<div class="mh-brand"><a class="brand" href="{BASE}/careers/">기업자금센터 <span>인재 채용</span></a><a class="mh-home" href="{SITE["homepage"]}">홈페이지</a></div>', 1)
+    html = html.replace(f'<a class="brand" href="{BASE}/"><b>기업</b>자금센터</a>', f'<div class="mh-brand"><a class="brand" href="{BASE}/careers/"><b>기업</b>자금센터 <span>인재 채용</span></a><a class="mh-home" href="{SITE["homepage"]}">홈페이지</a></div>', 1)
     nav_old = html[html.index('<nav class="nav">'):html.index('</nav>') + 6]
     nav_new = (f'<nav class="nav">\n      <a href="#income">소득 수준</a>\n      <a href="#training">육성 과정</a>\n'
                f'      <a href="#req">지원 자격</a>\n      <a class="nav-home" href="{SITE["homepage"]}">홈페이지</a>\n      <a class="nav-cta" href="#applyCard">지원하기</a>\n    </nav>')
+    html = html.replace(BURGER, "", 1)
     html = html.replace(nav_old, nav_new, 1)
     write("careers/index.html", html)
 
@@ -1211,12 +1230,12 @@ time{{color:#5d6270;font-size:13px;white-space:nowrap;padding-top:2px;flex:none}
   li:nth-child(n+3){{display:none}}
 }}
 </style></head>
-<body><div class="w"><div class="w-head"><b>최신 자금정보</b><a href="{FULL}/" target="_top">전체 보기</a></div><ul>{items}</ul></div></body></html>
+<body><div class="w"><div class="w-head"><b>최신 자금정보</b><a href="{FULL}/info/" target="_top">전체 보기</a></div><ul>{items}</ul></div></body></html>
 """
     write("widget.html", w)
 
 
-def build_feed(posts):
+def build_feed(posts, extra=()):
     now = datetime.now(KST).strftime("%a, %d %b %Y %H:%M:%S +0900")
     items = "".join(
         f"""<item><title>{esc(p['title'])}</title><link>{FULL}/p/{p['slug']}/</link><guid>{FULL}/p/{p['slug']}/</guid>
@@ -1225,11 +1244,11 @@ def build_feed(posts):
         for p in posts[:30]
     )
     write("feed.xml", f"""<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0"><channel><title>{esc(SITE['title'])}</title><link>{FULL}/</link>
+<rss version="2.0"><channel><title>{esc(SITE['title'])}</title><link>{FULL}/info/</link>
 <description>{esc(SITE['description'])}</description><language>ko</language><lastBuildDate>{now}</lastBuildDate>
 {items}</channel></rss>
 """)
-    urls = [f"{FULL}/", f"{FULL}/apply/", f"{FULL}/limit/", f"{FULL}/results/", f"{FULL}/careers/"] + [f"{FULL}/p/{p['slug']}/" for p in posts]
+    urls = [FULL + u for u in extra] + [f"{FULL}/apply/", f"{FULL}/limit/", f"{FULL}/results/", f"{FULL}/careers/"] + [f"{FULL}/p/{p['slug']}/" for p in posts]
     urls += [f"{FULL}/c/{v}/" for v in CATEGORIES.values()]
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
           + "".join(f"<url><loc>{u}</loc></url>\n" for u in urls) + "</urlset>\n")
@@ -1254,7 +1273,7 @@ def main():
     if len(slugs) != len(set(slugs)):
         raise SystemExit("같은 slug 를 쓰는 글이 두 개 있습니다")
 
-    build_list_page(posts, SITE["title"], SITE["tagline"], FULL + "/", "index.html")
+    build_list_page(posts, SITE["title"], SITE["tagline"], FULL + "/info/", "info/index.html")
     for cat, key in CATEGORIES.items():
         sub = [p for p in posts if p["category"] == cat]
         build_list_page(sub, cat, f"{cat} 칼럼 모음", FULL + f"/c/{key}/", f"c/{key}/index.html")
@@ -1265,8 +1284,9 @@ def main():
     build_results()
     build_careers()
     build_check()
+    extra = build_site_pages(posts, dict(page=page, write=write, esc=esc, chip=chip, BASE=BASE, FULL=FULL, SITE=SITE, ROOT=ROOT))
     build_widget(posts)
-    build_feed(posts)
+    build_feed(posts, extra)
     (ROOT / ".nojekyll").touch()
     print(f"완료: 글 {len(posts)}개")
 

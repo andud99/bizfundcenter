@@ -2,11 +2,17 @@
   "title": "기업자금센터 자금정보",
   "tagline": "대표님이 자금 결정을 내리기 전에 읽는 이야기",
   "description": "정책자금, 기술개발자금, 창업지원금, 세금과 기업구조까지. 2013년부터 기업자금 현장을 지켜온 기업자금센터가 매주 월·수요일, 현장 사례와 자금정보를 전합니다.",
-  "url": "https://blog.bizfunding.co.kr",
+  "url": "https://bizfunding.co.kr",
   "base": "",
-  "homepage": "https://bizfunding.co.kr",
+  "homepage": "https://bizfunding.co.kr/",
   "author": "기업자금센터",
   "address": "서울 마포구 마포대로 144 마포T타워 5층",
   "formspree": "https://formspree.io/f/xovkbbkg",
-  "gas_url": "https://script.google.com/macros/s/AKfycbwYFzeX8odlrVgA9krs1p2Ke25Qn_2YsoEUCERWiMATqzFkBuNNLxcCgISFYvDv1VL1tg/exec"
+  "gas_url": "https://script.google.com/macros/s/AKfycbwYFzeX8odlrVgA9krs1p2Ke25Qn_2YsoEUCERWiMATqzFkBuNNLxcCgISFYvDv1VL1tg/exec",
+  "phone": "02-6941-0868",
+  "email": "andud99@daum.net",
+  "ceo": "황무영",
+  "bizno": "728-40-00744",
+  "since": "2013",
+  "team": "9"
 }
